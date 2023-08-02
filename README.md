@@ -1,4 +1,4 @@
-# [chat-app-react](https://chat-app-react-ts-six.vercel.app/)
+# [simple-chat-react-ts](https://simple-chat-react-ts.vercel.app)
 
 # Hosted on [Vercel](https://vercel.com/)
 

@@ -1,0 +1,772 @@
+[
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af173c"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "Hello, How are you?",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T16:43:30Z",
+    "updatedAt": "2022-09-06T14:55:22Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T14:55:22Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af173d"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92b0efc13ae533baf21e9",
+    "message": "Hey there! I'm doing good. How about you?",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T16:50:20Z",
+    "updatedAt": "2022-09-06T14:58:10Z",
+    "isSeen": [
+      { "userId": "64c92f0efc13ae533baf11e9", "time": "2022-09-06T14:58:10Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af173e"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "I'm glad to hear that! I'm doing well too.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T16:53:45Z",
+    "updatedAt": "2022-09-06T15:01:35Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T15:01:35Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af173f"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92b0efc13ae533baf21e9",
+    "message": "That's great! What have you been up to lately?",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:02:10Z",
+    "updatedAt": "2022-09-06T15:05:55Z",
+    "isSeen": [
+      { "userId": "64c92f0efc13ae533baf11e9", "time": "2022-09-06T15:05:55Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1740"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "Not much, just working on some projects.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:05:20Z",
+    "updatedAt": "2022-09-06T15:08:40Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T15:08:40Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1741"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92b0efc13ae533baf21e9",
+    "message": "Sounds interesting! What kind of projects are you working on?",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:10:05Z",
+    "updatedAt": "2022-09-06T15:12:30Z",
+    "isSeen": [
+      { "userId": "64c92f0efc13ae533baf11e9", "time": "2022-09-06T15:12:30Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1742"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "I'm working on a web development project using React.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:12:50Z",
+    "updatedAt": "2022-09-06T15:15:20Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T15:15:20Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1743"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92b0efc13ae533baf21e9",
+    "message": "That's cool! I love React. How's it going?",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:15:30Z",
+    "updatedAt": "2022-09-06T15:18:10Z",
+    "isSeen": [
+      { "userId": "64c92f0efc13ae533baf11e9", "time": "2022-09-06T15:18:10Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1744"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "It's going well! I've made good progress so far.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:18:00Z",
+    "updatedAt": "2022-09-06T15:20:40Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T15:20:40Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1745"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92b0efc13ae533baf21e9",
+    "message": "That's awesome! Keep up the good work.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:21:15Z",
+    "updatedAt": "2022-09-06T15:23:00Z",
+    "isSeen": [
+      { "userId": "64c92f0efc13ae533baf11e9", "time": "2022-09-06T15:23:00Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1746"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "Thanks! How about you? What have you been up to?",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:24:30Z",
+    "updatedAt": "2022-09-06T15:25:45Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T15:25:45Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1747"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92b0efc13ae533baf21e9",
+    "message": "I've been busy with some freelance projects.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:27:15Z",
+    "updatedAt": "2022-09-06T15:28:10Z",
+    "isSeen": [
+      { "userId": "64c92f0efc13ae533baf11e9", "time": "2022-09-06T15:28:10Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1748"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "That's great! Freelancing can be rewarding.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:30:00Z",
+    "updatedAt": "2022-09-06T15:31:20Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T15:31:20Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1749"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92b0efc13ae533baf21e9",
+    "message": "Indeed! It gives me more flexibility and challenges.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:32:45Z",
+    "updatedAt": "2022-09-06T15:33:30Z",
+    "isSeen": [
+      { "userId": "64c92f0efc13ae533baf11e9", "time": "2022-09-06T15:33:30Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af174a"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "That's awesome! I'm happy for you.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:35:15Z",
+    "updatedAt": "2022-09-06T15:36:00Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T15:36:00Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af174b"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "Thanks! So, how's your day been?",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:37:30Z",
+    "updatedAt": "2022-09-06T15:38:20Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T15:38:20Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af174c"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92b0efc13ae533baf21e9",
+    "message": "It's been good so far. Just a bit busy with work.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:40:10Z",
+    "updatedAt": "2022-09-06T15:41:10Z",
+    "isSeen": [
+      { "userId": "64c92f0efc13ae533baf11e9", "time": "2022-09-06T15:41:10Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af174d"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "I understand. Take it easy and don't overwork yourself.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:43:20Z",
+    "updatedAt": "2022-09-06T15:43:50Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T15:43:50Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af174e"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92b0efc13ae533baf21e9",
+    "message": "Thanks for the advice! I'll make sure to take breaks.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:45:40Z",
+    "updatedAt": "2022-09-06T15:45:30Z",
+    "isSeen": [
+      { "userId": "64c92f0efc13ae533baf11e9", "time": "2022-09-06T15:45:30Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af174f"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "You're welcome! It's important to take care of yourself.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:47:50Z",
+    "updatedAt": "2022-09-06T15:47:40Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T15:47:40Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1750"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "Absolutely! I've learned it the hard way.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:50:00Z",
+    "updatedAt": "2022-09-06T15:50:20Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T15:50:20Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1751"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "It happens to the best of us. Just remember to find balance.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:52:30Z",
+    "updatedAt": "2022-09-06T15:53:15Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T15:53:15Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1752"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92b0efc13ae533baf21e9",
+    "message": "You're right. Finding a balance is crucial.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:55:00Z",
+    "updatedAt": "2022-09-06T15:55:50Z",
+    "isSeen": [
+      { "userId": "64c92f0efc13ae533baf11e9", "time": "2022-09-06T15:55:50Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1753"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "Exactly. It's all about managing time and priorities.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T17:58:10Z",
+    "updatedAt": "2022-09-06T15:58:20Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T15:58:20Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1754"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92b0efc13ae533baf21e9",
+    "message": "Absolutely! Anyway, how's your family doing?",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T18:00:40Z",
+    "updatedAt": "2022-09-06T16:00:55Z",
+    "isSeen": [
+      { "userId": "64c92f0efc13ae533baf11e9", "time": "2022-09-06T16:00:55Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1755"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "They're all doing well, thank you for asking.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T18:03:15Z",
+    "updatedAt": "2022-09-06T16:03:30Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T16:03:30Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1756"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92b0efc13ae533baf21e9",
+    "message": "That's wonderful to hear. Say hi to them from me!",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T18:05:45Z",
+    "updatedAt": "2022-09-06T16:05:55Z",
+    "isSeen": [
+      { "userId": "64c92f0efc13ae533baf11e9", "time": "2022-09-06T16:05:55Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1757"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "Sure, I'll pass on your regards. Thanks!",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T18:08:20Z",
+    "updatedAt": "2022-09-06T16:08:35Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T16:08:35Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1758"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92b0efc13ae533baf21e9",
+    "message": "You're welcome! So, any exciting plans for the weekend?",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T18:10:55Z",
+    "updatedAt": "2022-09-06T16:10:40Z",
+    "isSeen": [
+      { "userId": "64c92f0efc13ae533baf11e9", "time": "2022-09-06T16:10:40Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1759"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "I might go hiking if the weather is nice.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T18:12:30Z",
+    "updatedAt": "2022-09-06T16:12:20Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T16:12:20Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af175a"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92b0efc13ae533baf21e9",
+    "message": "Hiking sounds like a great idea! Have fun!",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T18:15:00Z",
+    "updatedAt": "2022-09-06T16:15:15Z",
+    "isSeen": [
+      { "userId": "64c92f0efc13ae533baf11e9", "time": "2022-09-06T16:15:15Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af175b"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "Thanks! I'm looking forward to it.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T18:17:25Z",
+    "updatedAt": "2022-09-06T16:17:40Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T16:17:40Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af175c"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "You're welcome! If you need company, let me know.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T18:20:00Z",
+    "updatedAt": "2022-09-06T16:20:15Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T16:20:15Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af175d"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "Thanks! I'll keep that in mind.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T18:22:20Z",
+    "updatedAt": "2022-09-06T16:22:30Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T16:22:30Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af175e"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92b0efc13ae533baf21e9",
+    "message": "No problem! So, anything else new with you?",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T18:25:00Z",
+    "updatedAt": "2022-09-06T16:25:15Z",
+    "isSeen": [
+      { "userId": "64c92f0efc13ae533baf11e9", "time": "2022-09-06T16:25:15Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af175f"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "Not much else, just taking things one day at a time.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T18:27:15Z",
+    "updatedAt": "2022-09-06T16:27:30Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T16:27:30Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1760"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92b0efc13ae533baf21e9",
+    "message": "That's a good approach. Life can get overwhelming.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T18:30:00Z",
+    "updatedAt": "2022-09-06T16:30:15Z",
+    "isSeen": [
+      { "userId": "64c92f0efc13ae533baf11e9", "time": "2022-09-06T16:30:15Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1761"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "Exactly, so I'm learning to take it easy.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T18:32:30Z",
+    "updatedAt": "2022-09-06T16:32:45Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T16:32:45Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1762"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "That's a wise decision. It's important to take care of yourself.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T18:35:00Z",
+    "updatedAt": "2022-09-06T16:35:15Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T16:35:15Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1763"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "Thank you. It's been great talking to you.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T18:37:20Z",
+    "updatedAt": "2022-09-06T16:37:30Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T16:37:30Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1764"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92b0efc13ae533baf21e9",
+    "message": "You're welcome! I enjoyed our chat as well.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T18:39:40Z",
+    "updatedAt": "2022-09-06T16:39:55Z",
+    "isSeen": [
+      { "userId": "64c92f0efc13ae533baf11e9", "time": "2022-09-06T16:39:55Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1765"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "Let's catch up again soon. Have a great day!",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T18:42:15Z",
+    "updatedAt": "2022-09-06T16:42:30Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T16:42:30Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1766"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "",
+    "isImage": true,
+    "imageUrl": "http://dummyimage.com/800x600.png/ff0000/ffffff",
+    "createdAt": "2022-07-28T18:45:00Z",
+    "updatedAt": "2022-09-06T16:45:15Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T16:45:15Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1767"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92b0efc13ae533baf21e9",
+    "message": "",
+    "isImage": true,
+    "imageUrl": "http://dummyimage.com/1200x800.png/00ff00/ffffff",
+    "createdAt": "2022-07-28T18:47:30Z",
+    "updatedAt": "2022-09-06T16:47:45Z",
+    "isSeen": [
+      { "userId": "64c92f0efc13ae533baf11e9", "time": "2022-09-06T16:47:45Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1768"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "",
+    "isImage": true,
+    "imageUrl": "http://dummyimage.com/1600x900.png/0000ff/ffffff",
+    "createdAt": "2022-07-28T18:50:00Z",
+    "updatedAt": "2022-09-06T16:50:15Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T16:50:15Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1769"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92b0efc13ae533baf21e9",
+    "message": "",
+    "isImage": true,
+    "imageUrl": "http://dummyimage.com/1000x800.png/ffff00/ffffff",
+    "createdAt": "2022-07-28T18:52:30Z",
+    "updatedAt": "2022-09-06T16:52:45Z",
+    "isSeen": [
+      { "userId": "64c92f0efc13ae533baf11e9", "time": "2022-09-06T16:52:45Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1770"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "",
+    "isImage": true,
+    "imageUrl": "http://dummyimage.com/1200x900.png/ffa500/ffffff",
+    "createdAt": "2022-07-28T18:55:00Z",
+    "updatedAt": "2022-09-06T16:55:15Z",
+    "isSeen": [
+      { "userId": "64c92b0efc13ae533baf21e9", "time": "2022-09-06T16:55:15Z" }
+    ]
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1771"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "Hey, how's your day going?",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T19:00:00Z",
+    "updatedAt": "2022-09-06T17:00:15Z",
+    "isSeen": []
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1772"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "Did you watch that new movie everyone's talking about?",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T19:05:30Z",
+    "updatedAt": "2022-09-06T17:05:45Z",
+    "isSeen": []
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1773"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "I heard it's really good!",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T19:10:00Z",
+    "updatedAt": "2022-09-06T17:10:15Z",
+    "isSeen": []
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1774"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "Let me know if you get a chance to watch it.",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T19:15:30Z",
+    "updatedAt": "2022-09-06T17:15:45Z",
+    "isSeen": []
+  },
+  {
+    "id": {
+      "$oid": "64c92dc9fc13ae5356af1775"
+    },
+    "conversationId": "64c92dc9fc13ae5356af174c",
+    "senderId": "64c92f0efc13ae533baf11e9",
+    "message": "Anyway, let's catch up soon!",
+    "isImage": false,
+    "imageUrl": "",
+    "createdAt": "2022-07-28T19:20:00Z",
+    "updatedAt": "2022-09-06T17:20:15Z",
+    "isSeen": []
+  }
+]
