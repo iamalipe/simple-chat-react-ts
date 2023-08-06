@@ -1,10 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../types";
-import { RegisterServicePayload } from "../../services";
-import { useLayoutEffect, useState } from "react";
-import useAPI from "../../hooks/useAPI";
-import { toast } from "../../libs";
-import { useGlobalState } from "../../state";
+import { useState } from "react";
+// import { toast } from "../../libs";
+// import { useGlobalState } from "../../state";
 
 interface ErrorMsg {
   email: string | null;
@@ -14,7 +12,7 @@ interface ErrorMsg {
 }
 
 const Signup = () => {
-  const [signupInfo, setSignupInfo] = useState<RegisterServicePayload>({
+  const [signupInfo, setSignupInfo] = useState({
     email: "",
     username: "",
     password: "",
@@ -28,13 +26,8 @@ const Signup = () => {
     repeatPassword: null,
   });
 
-  const { api } = useAPI();
-  const { state } = useGlobalState();
-  const navigate = useNavigate();
-
-  useLayoutEffect(() => {
-    if (state.token) navigate(RouteNames.HOME);
-  }, [state.token]);
+  // const { state } = useGlobalState();
+  // const navigate = useNavigate();
 
   const onChangeSignupInfo: React.ChangeEventHandler<HTMLInputElement> = (
     e
@@ -46,25 +39,6 @@ const Signup = () => {
 
   const onFormSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    const res = await api.auth.register(signupInfo);
-    if (Object.hasOwn(res, "error")) {
-      setSignupError(res.error);
-      return;
-    }
-    setSignupInfo({
-      email: "",
-      username: "",
-      password: "",
-      repeatPassword: "",
-    });
-    setSignupError({
-      email: null,
-      username: null,
-      password: null,
-      repeatPassword: null,
-    });
-    toast(res.message);
-    navigate(RouteNames.LOGIN);
   };
 
   return (

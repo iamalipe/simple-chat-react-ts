@@ -75,6 +75,7 @@ export const Chat = () => {
   const newData = groupChatData(chatData);
   const myId = "64c92f0efc13ae533baf11e9";
   const [value, setValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const onValueChange = (text: string) => {
     setValue(text);
@@ -100,33 +101,36 @@ export const Chat = () => {
           className="daisy-input daisy-input-sm daisy-input-bordered ml-2 flex-1 min-w-0 new-chat-toggle-target transition-all duration-1000 mr-0"
         /> */}
       </div>
-      <div className="p-2 sm:p-5 flex-1 overflow-auto flex flex-col-reverse gap-2">
-        <ChatMessageSkeletonSelf />
-        <ChatMessageSkeletonSelf />
-        <ChatMessageSkeleton />
-        <ChatMessageSkeletonSelf />
-        <ChatMessageSkeleton />
-        <ChatMessageSkeletonSelf />
-        <ChatMessageSkeleton />
-        <ChatMessageSkeleton />
-      </div>
-      {/* <div className="p-2 sm:p-5 flex-1 overflow-auto flex flex-col gap-2">
-        {newData.map((e, index) =>
-          e.senderId === myId ? (
-            <ChatMessageSelf
-              key={index}
-              messages={e.messages}
-              username={e.senderId}
-            />
-          ) : (
-            <ChatMessage
-              key={index}
-              messages={e.messages}
-              username={e.senderId}
-            />
-          )
-        )}
-      </div> */}
+      {isLoading ? (
+        <div className="p-2 sm:p-5 flex-1 overflow-auto flex flex-col-reverse gap-2">
+          <ChatMessageSkeletonSelf />
+          <ChatMessageSkeletonSelf />
+          <ChatMessageSkeleton />
+          <ChatMessageSkeletonSelf />
+          <ChatMessageSkeleton />
+          <ChatMessageSkeletonSelf />
+          <ChatMessageSkeleton />
+          <ChatMessageSkeleton />
+        </div>
+      ) : (
+        <div className="p-2 sm:p-5 flex-1 overflow-auto flex flex-col gap-2">
+          {newData.map((e, index) =>
+            e.senderId === myId ? (
+              <ChatMessageSelf
+                key={index}
+                messages={e.messages}
+                username={e.senderId}
+              />
+            ) : (
+              <ChatMessage
+                key={index}
+                messages={e.messages}
+                username={e.senderId}
+              />
+            )
+          )}
+        </div>
+      )}
       <div className="flex-none bg-base-200 flex flex-col px-2 sm:px-6">
         <div className="flex flex-col max-h-48">
           <textarea

@@ -1,9 +1,6 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { RouteNames } from "../../types";
-import { useState, useLayoutEffect } from "react";
-import { LoginServicePayload } from "../../services";
-import useAPI from "../../hooks/useAPI";
-import { useGlobalState } from "../../state";
+import { useState } from "react";
 
 interface ErrorMsg {
   email: string | null;
@@ -11,10 +8,9 @@ interface ErrorMsg {
 }
 
 const Login = () => {
-  const { state, setState } = useGlobalState();
-  const { api } = useAPI();
-  const navigate = useNavigate();
-  const [loginInfo, setLoginInfo] = useState<LoginServicePayload>({
+  // const { state, setState } = useGlobalState();
+  // const navigate = useNavigate();
+  const [loginInfo, setLoginInfo] = useState({
     email: "",
     password: "",
   });
@@ -24,9 +20,9 @@ const Login = () => {
     password: null,
   });
 
-  useLayoutEffect(() => {
-    if (state.token) navigate(RouteNames.HOME);
-  }, [state.token]);
+  // useLayoutEffect(() => {
+  //   if (state.token) navigate(RouteNames.HOME);
+  // }, [state.token]);
 
   const onChangeLoginInfo: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const fieldName = e.target.name;
@@ -36,29 +32,6 @@ const Login = () => {
 
   const onFormSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    const res = await api.auth.login(loginInfo);
-    if (Object.hasOwn(res, "error")) {
-      setLoginError(res.error);
-      return;
-    }
-
-    setState((prev) => ({
-      ...prev,
-      token: res.token,
-      currentUser: {
-        email: res.email,
-        userId: res.userId,
-        username: res.username,
-      },
-    }));
-    setLoginInfo({
-      email: "",
-      password: "",
-    });
-    setLoginError({
-      email: null,
-      password: null,
-    });
   };
 
   return (

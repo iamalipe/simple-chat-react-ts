@@ -3,16 +3,15 @@ import { THEMES_OBJECT } from "../utils";
 
 const Header = () => {
   const { state, setState } = useGlobalState();
+  const isOnline = true;
+  const isAuth = false;
+
   const onChangeTheme: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     const value = e.target.value;
     setState({ ...state, theme: value });
   };
 
-  const onLogout = () => {
-    // localStorage.removeItem("currentUser");
-    // localStorage.removeItem("token");
-    // setState((prev) => ({ ...prev, currentUser: null, token: null }));
-  };
+  const onLogout = () => {};
 
   return (
     <>
@@ -20,7 +19,7 @@ const Header = () => {
         <h1 className="normal-case text-lg sm:text-xl font-medium whitespace-nowrap">
           Simple <span className="font-bold text-primary">Chat</span>
         </h1>
-        {/* {state.isOnline ? (
+        {isOnline ? (
           <span className="ml-auto mr-2 daisy-btn daisy-btn-sm daisy-btn-success">
             Online
           </span>
@@ -28,7 +27,7 @@ const Header = () => {
           <span className="ml-auto mr-2 daisy-btn daisy-btn-sm daisy-btn-error">
             Offline
           </span>
-        )} */}
+        )}
         <div className="flex sm:gap-4 gap-2 items-center">
           <span className="hidden sm:block">Theme</span>
           <select
@@ -46,7 +45,7 @@ const Header = () => {
           </select>
         </div>
 
-        {state.token && (
+        {isAuth && (
           <button
             onClick={onLogout}
             className="daisy-btn daisy-btn-neutral daisy-btn-xs sm:daisy-btn-sm ml-2 sm:ml-4"
