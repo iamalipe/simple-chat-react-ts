@@ -1,8 +1,10 @@
 const Home = () => {
   return (
     <>
-      <div className="flex-1 w-full bg-blue-600 overflow-auto">
-        <h1>Home</h1>
+      <div className="flex-1 w-full overflow-auto flex flex-col justify-center items-center">
+        <h1 className="normal-case text-xl sm:text-4xl font-medium text-center">
+          Welcome to Simple <span className="font-bold text-primary">Chat</span>
+        </h1>
       </div>
     </>
   );

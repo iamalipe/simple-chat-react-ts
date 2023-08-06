@@ -1,3 +1,6 @@
+import { useNavigate } from "react-router-dom";
+import { RouteNames } from "../types";
+
 const Sidebar = () => {
   return (
     <>
@@ -143,8 +146,16 @@ const Sidebar = () => {
 export default Sidebar;
 
 const ListItem = () => {
+  const navigate = useNavigate();
+  const onOpenChat = () => {
+    navigate(RouteNames.CHAT, { state: "Abhiseck" });
+  };
+
   return (
-    <div className="flex-none flex h-16 px-2 py-1 text-sm border-y border-y-base-200 hover:bg-base-300 hover:border-y-base-300">
+    <div
+      onClick={onOpenChat}
+      className="cursor-pointer flex-none flex h-16 px-2 py-1 text-sm border-y border-y-base-200 hover:bg-base-300 hover:border-y-base-300"
+    >
       <div className="daisy-avatar daisy-online w-12 h-12 self-center">
         <div className="w-full rounded-full">
           <img src="https://dummyimage.com/500x500/4166eb/fff.jpg" />

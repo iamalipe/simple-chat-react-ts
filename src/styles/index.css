@@ -51,3 +51,7 @@
 .chat-item-border-self:hover + span {
   height: 16px;
 }
+
+.daisy-rounded {
+  border-radius: var(--rounded-box, 0.5rem);
+}
