@@ -1,33 +1,29 @@
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../types";
-import { useState } from "react";
-// import { toast } from "../../libs";
-// import { useGlobalState } from "../../state";
+import { useState, useEffect } from "react";
+import { NoErrorsAuthentication, handleAuthenticationError } from "../../utils";
+import { useRealm } from "../../hooks";
 
-interface ErrorMsg {
-  email: string | null;
-  username: string | null;
-  password: string | null;
-  repeatPassword: string | null;
-}
+const noErrors: NoErrorsAuthentication = {
+  email: null,
+  password: null,
+  other: null,
+};
+const initSignupInfo = {
+  email: "",
+  password: "",
+};
 
 const Signup = () => {
-  const [signupInfo, setSignupInfo] = useState({
-    email: "",
-    username: "",
-    password: "",
-    repeatPassword: "",
-  });
+  const { app, currentUser } = useRealm();
+  const [signupInfo, setSignupInfo] = useState(initSignupInfo);
+  const [signupError, setSignupError] = useState(noErrors);
 
-  const [signupError, setSignupError] = useState<ErrorMsg>({
-    email: null,
-    username: null,
-    password: null,
-    repeatPassword: null,
-  });
+  const navigate = useNavigate();
 
-  // const { state } = useGlobalState();
-  // const navigate = useNavigate();
+  useEffect(() => {
+    if (currentUser) navigate(RouteNames.HOME);
+  }, [currentUser]);
 
   const onChangeSignupInfo: React.ChangeEventHandler<HTMLInputElement> = (
     e
@@ -39,11 +35,22 @@ const Signup = () => {
 
   const onFormSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
+    setSignupError(noErrors);
+    try {
+      await app.emailPasswordAuth.registerUser({
+        email: signupInfo.email.toLowerCase(),
+        password: signupInfo.password,
+      });
+      setSignupInfo(initSignupInfo);
+      navigate(RouteNames.LOGIN);
+    } catch (err) {
+      handleAuthenticationError(err, setSignupError);
+    }
   };
 
   return (
     <div className="flex-1 flex justify-center">
-      <div className="flex flex-col w-full max-w-md mt-[10%] sm:mt-[5%] h-fit px-4">
+      <div className="flex flex-col w-full max-w-md mt-[20%] sm:mt-[10%] h-fit px-4">
         <div className="text-center">
           <div className="text-3xl font-semibold mb-3 tracking-tight">
             Welcome to Chat App
@@ -61,22 +68,6 @@ const Signup = () => {
           </div>
         </div>
         <form onSubmit={onFormSubmit} className="flex flex-col gap-4">
-          <label>
-            <span className="text-lg font-medium ml-2">Username</span>
-            <input
-              value={signupInfo.username}
-              onChange={onChangeSignupInfo}
-              name="username"
-              type="text"
-              placeholder="enter your username"
-              className="daisy-input daisy-input-bordered text-lg daisy-input-md w-full mt-1"
-            />
-            {signupError.username && (
-              <span className="text-error text-sm font-medium ml-2">
-                {signupError.username}
-              </span>
-            )}
-          </label>
           <label>
             <span className="text-lg font-medium ml-2">Email</span>
             <input
@@ -106,22 +97,6 @@ const Signup = () => {
             {signupError.password && (
               <span className="text-error text-sm font-medium ml-2">
                 {signupError.password}
-              </span>
-            )}
-          </label>
-          <label>
-            <span className="text-lg font-medium ml-2">Re-enter password</span>
-            <input
-              value={signupInfo.repeatPassword}
-              onChange={onChangeSignupInfo}
-              name="repeatPassword"
-              type="password"
-              placeholder="re-enter your password"
-              className="daisy-input daisy-input-bordered text-lg daisy-input-md w-full mt-1"
-            />
-            {signupError.repeatPassword && (
-              <span className="text-error text-sm font-medium ml-2">
-                {signupError.repeatPassword}
               </span>
             )}
           </label>

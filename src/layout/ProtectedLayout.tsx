@@ -3,10 +3,10 @@ import Header from "./Header";
 import Sidebar from "./SideBar";
 import { RouteNames } from "../types";
 import { Outlet, Navigate } from "react-router-dom";
+import { useRealm } from "../hooks";
 
 const ProtectedLayout = () => {
-  const auth = true;
-
+  const { currentUser } = useRealm();
   const withLayout = (
     <div className="container mx-auto h-full relative flex flex-col bg-base-100 text-base-content">
       <Header />
@@ -18,6 +18,6 @@ const ProtectedLayout = () => {
     </div>
   );
 
-  return auth ? withLayout : <Navigate to={RouteNames.LOGIN} />;
+  return currentUser ? withLayout : <Navigate to={RouteNames.LOGIN} />;
 };
 export default ProtectedLayout;

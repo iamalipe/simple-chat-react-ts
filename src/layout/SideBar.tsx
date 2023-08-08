@@ -1,12 +1,23 @@
 import { useNavigate } from "react-router-dom";
-import { RouteNames } from "../types";
+import { RouteNames, UserInterface } from "../types";
+import { useState } from "react";
+import { useRealm, useUsers } from "../hooks";
+import dayjs from "dayjs";
 
 const Sidebar = () => {
+  const { currentUser } = useRealm();
+  const [conversations, setConversations] = useState([]);
+  const users = useUsers();
+
+  const usersListWithoutCurrentUser = users.state.filter(
+    (e) => e._id !== currentUser?.id
+  );
+
   return (
     <>
       <input
         type="checkbox"
-        // defaultChecked
+        defaultChecked
         id="side-bar-toggle"
         className="hidden"
       />
@@ -76,67 +87,9 @@ const Sidebar = () => {
           </label>
         </div>
         <div className="flex-1 overflow-auto">
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
-          <ListItem />
+          {usersListWithoutCurrentUser.map((e, index) => (
+            <ListItem key={index} data={e} />
+          ))}
         </div>
         <button className="daisy-btn m-2">New Chat</button>
       </div>
@@ -145,7 +98,10 @@ const Sidebar = () => {
 };
 export default Sidebar;
 
-const ListItem = () => {
+interface ListItemProps {
+  data: UserInterface;
+}
+const ListItem: React.FC<ListItemProps> = ({ data }) => {
   const navigate = useNavigate();
   const onOpenChat = () => {
     navigate(RouteNames.CHAT, { state: "Abhiseck" });
@@ -162,9 +118,9 @@ const ListItem = () => {
         </div>
       </div>
       <div className="flex-1 flex flex-col justify-center whitespace-nowrap overflow-hidden ml-2">
-        <div className="font-medium">Abhiseck BHattacharya</div>
+        <div className="font-medium">{data.email}</div>
         <span className="font-light">
-          Hello, i'm abhiseck bhattacjarya adb jbdubd kdhjdn duj ndu eemksdsd
+          Joined on {dayjs(data.createdAt).format("MMMM D, YYYY")}
         </span>
       </div>
     </div>

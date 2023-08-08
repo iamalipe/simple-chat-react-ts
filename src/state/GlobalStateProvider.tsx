@@ -1,7 +1,6 @@
 import React, {
   createContext,
   useState,
-  useContext,
   Dispatch,
   SetStateAction,
   useLayoutEffect,
@@ -40,13 +39,4 @@ export const GlobalStateProvider: React.FC<{ children: React.ReactNode }> = ({
       {children}
     </GlobalStateContext.Provider>
   );
-};
-
-// eslint-disable-next-line react-refresh/only-export-components
-export const useGlobalState = () => {
-  const context = useContext(GlobalStateContext);
-  if (!context) {
-    throw new Error("useGlobalState must be used within a GlobalStateContext");
-  }
-  return context;
 };

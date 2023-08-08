@@ -1,17 +1,18 @@
-import { useGlobalState } from "../state";
+import { useGlobalState, useRealm } from "../hooks";
 import { THEMES_OBJECT } from "../utils";
 
 const Header = () => {
   const { state, setState } = useGlobalState();
-  const isOnline = true;
-  const isAuth = false;
+  const { currentUser, logOut } = useRealm();
 
   const onChangeTheme: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     const value = e.target.value;
     setState({ ...state, theme: value });
   };
 
-  const onLogout = () => {};
+  const onLogout = async () => {
+    await logOut();
+  };
 
   return (
     <>
@@ -19,7 +20,7 @@ const Header = () => {
         <h1 className="normal-case text-lg sm:text-xl font-medium whitespace-nowrap">
           Simple <span className="font-bold text-primary">Chat</span>
         </h1>
-        {isOnline ? (
+        {/* {isOnline ? (
           <span className="ml-auto mr-2 daisy-btn daisy-btn-sm daisy-btn-success">
             Online
           </span>
@@ -27,8 +28,8 @@ const Header = () => {
           <span className="ml-auto mr-2 daisy-btn daisy-btn-sm daisy-btn-error">
             Offline
           </span>
-        )}
-        <div className="flex sm:gap-4 gap-2 items-center">
+        )} */}
+        <div className="flex sm:gap-4 gap-2 items-center ml-auto">
           <span className="hidden sm:block">Theme</span>
           <select
             className="daisy-select daisy-select-bordered daisy-select-xs sm:daisy-select-sm w-20 sm:w-full max-w-xs"
@@ -45,7 +46,7 @@ const Header = () => {
           </select>
         </div>
 
-        {isAuth && (
+        {currentUser && (
           <button
             onClick={onLogout}
             className="daisy-btn daisy-btn-neutral daisy-btn-xs sm:daisy-btn-sm ml-2 sm:ml-4"

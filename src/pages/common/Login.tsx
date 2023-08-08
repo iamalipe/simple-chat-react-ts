@@ -1,28 +1,29 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { NoErrorsAuthentication, handleAuthenticationError } from "../../utils";
+import { useRealm } from "../../hooks";
+import * as RealmWeb from "realm-web";
 
-interface ErrorMsg {
-  email: string | null;
-  password: string | null;
-}
+const noErrors: NoErrorsAuthentication = {
+  email: null,
+  password: null,
+  other: null,
+};
+const initLoginInfo = {
+  email: "",
+  password: "",
+};
 
 const Login = () => {
-  // const { state, setState } = useGlobalState();
-  // const navigate = useNavigate();
-  const [loginInfo, setLoginInfo] = useState({
-    email: "",
-    password: "",
-  });
+  const { app, currentUser } = useRealm();
+  const navigate = useNavigate();
+  const [loginInfo, setLoginInfo] = useState(initLoginInfo);
+  const [loginError, setLoginError] = useState(noErrors);
 
-  const [loginError, setLoginError] = useState<ErrorMsg>({
-    email: null,
-    password: null,
-  });
-
-  // useLayoutEffect(() => {
-  //   if (state.token) navigate(RouteNames.HOME);
-  // }, [state.token]);
+  useEffect(() => {
+    if (currentUser) navigate(RouteNames.HOME);
+  }, [currentUser]);
 
   const onChangeLoginInfo: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const fieldName = e.target.name;
@@ -32,6 +33,19 @@ const Login = () => {
 
   const onFormSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
+    setLoginError(noErrors);
+    try {
+      await app.logIn(
+        RealmWeb.Credentials.emailPassword(
+          loginInfo.email.toLowerCase(),
+          loginInfo.password
+        )
+      );
+      setLoginInfo(initLoginInfo);
+      location.reload();
+    } catch (err) {
+      handleAuthenticationError(err, setLoginError);
+    }
   };
 
   return (
