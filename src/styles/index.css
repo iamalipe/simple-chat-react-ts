@@ -17,17 +17,6 @@
   @apply left-2;
 }
 
-#new-chat-toggle:checked + .new-chat-toggle-target {
-  @apply w-0 flex-none p-0 border-none m-0;
-}
-#new-chat-toggle:checked ~ .new-chat-toggle-target-2 {
-  @apply mr-12 sm:mr-2 ml-0 flex-1 daisy-input daisy-input-sm daisy-input-bordered;
-}
-
-#new-chat-toggle:checked ~ .new-chat-toggle-button {
-  @apply mr-2;
-}
-
 .chat-item-border {
   border-top-right-radius: var(--rounded-box, 0.5rem);
   border-bottom-right-radius: var(--rounded-box, 0.5rem);

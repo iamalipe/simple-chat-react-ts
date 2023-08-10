@@ -27,9 +27,10 @@ const defaultChangeHandlers = {
  */
 export function useWatch<T extends Realm.Services.MongoDB.Document>(
   changeHandlers: ChangeHandlers<T>,
-  collection?: Realm.Services.MongoDB.MongoDBCollection<T>
+  collection?: Realm.Services.MongoDB.MongoDBCollection<T>,
+  filter = {}
 ) {
-  const filter = useMemo(() => ({}), []);
+  const filterMemo = useMemo(() => filter, [filter]);
   const handlers = { ...defaultChangeHandlers, ...changeHandlers };
   const handlersRef = useRef(handlers);
 
@@ -52,7 +53,7 @@ export function useWatch<T extends Realm.Services.MongoDB.Document>(
       | AsyncGenerator<Realm.Services.MongoDB.ChangeEvent<T>, unknown, unknown>
       | undefined;
     const watchCollection = async () => {
-      stream = collection?.watch({ filter });
+      stream = collection?.watch({ filter: filterMemo });
       if (!stream) return;
       for await (const change of stream) {
         switch (change.operationType) {
@@ -87,5 +88,5 @@ export function useWatch<T extends Realm.Services.MongoDB.Document>(
       // @ts-ignore
       stream?.return();
     };
-  }, [collection, filter]);
+  }, [collection, filterMemo]);
 }

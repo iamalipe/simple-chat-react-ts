@@ -1,37 +1,46 @@
-import { useNavigate } from "react-router-dom";
-import { RouteNames, UserInterface } from "../types";
+import { useConversations, useRealm, useUsers } from "../hooks";
+import { ListItemConversation, ListItemUser } from "../pages/Chat";
 import { useState } from "react";
-import { useRealm, useUsers } from "../hooks";
-import dayjs from "dayjs";
 
 const Sidebar = () => {
   const { currentUser } = useRealm();
-  const [conversations, setConversations] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [isUserListOpen, setIsUserListOpen] = useState(false);
+
+  const conversations = useConversations();
   const users = useUsers();
 
   const usersListWithoutCurrentUser = users.state.filter(
     (e) => e._id !== currentUser?.id
   );
 
+  const onSearchValueChange: React.ChangeEventHandler<HTMLInputElement> = (
+    e
+  ) => {
+    setSearchValue(e.target.value);
+  };
+
+  const onSearchClick = () => {
+    console.log("onSearchClick");
+  };
+
   return (
     <>
-      <input
-        type="checkbox"
-        defaultChecked
-        id="side-bar-toggle"
-        className="hidden"
-      />
+      <input type="checkbox" id="side-bar-toggle" className="hidden" />
       <div className="side-nav-toggle-target flex-none w-full sm:w-[240px] md:w-[360px] bg-base-100 border-x border-x-base-200 overflow-auto transition-[width] duration-1000 flex flex-col">
         <div className="flex-none bg-base-200 h-12 flex items-center">
-          <input type="checkbox" id="new-chat-toggle" className="hidden" />
           <input
+            value={searchValue}
+            onChange={onSearchValueChange}
             type="text"
-            placeholder="Search..."
-            className="daisy-input daisy-input-sm daisy-input-bordered ml-2 flex-1 min-w-0 new-chat-toggle-target transition-all duration-1000 mr-0"
+            placeholder={
+              isUserListOpen ? "Search user ..." : "Search conversation ..."
+            }
+            className="daisy-input daisy-input-sm daisy-input-bordered ml-2 flex-1 min-w-0 transition-all duration-1000 mr-0"
           />
-          <label
-            htmlFor="new-chat-toggle"
-            className="daisy-btn daisy-btn-neutral daisy-btn-sm mr-12 ml-2 sm:mr-2 max-md:daisy-btn-square new-chat-toggle-button"
+          <button
+            onClick={onSearchClick}
+            className="daisy-btn daisy-btn-neutral daisy-btn-sm mr-12 ml-2 sm:mr-2 max-md:daisy-btn-square"
           >
             <svg
               className="h-5 w-5 md:hidden"
@@ -42,23 +51,14 @@ const Sidebar = () => {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M12 6C12.5523 6 13 6.44772 13 7V11H17C17.5523 11 18 11.4477 18 12C18 12.5523 17.5523 13 17 13H13V17C13 17.5523 12.5523 18 12 18C11.4477 18 11 17.5523 11 17V13H7C6.44772 13 6 12.5523 6 12C6 11.4477 6.44772 11 7 11H11V7C11 6.44772 11.4477 6 12 6Z"
-                fill="currentColor"
-              />
-              <path
                 fillRule="evenodd"
                 clipRule="evenodd"
-                d="M5 22C3.34315 22 2 20.6569 2 19V5C2 3.34315 3.34315 2 5 2H19C20.6569 2 22 3.34315 22 5V19C22 20.6569 20.6569 22 19 22H5ZM4 19C4 19.5523 4.44772 20 5 20H19C19.5523 20 20 19.5523 20 19V5C20 4.44772 19.5523 4 19 4H5C4.44772 4 4 4.44772 4 5V19Z"
+                d="M18.319 14.4326C20.7628 11.2941 20.542 6.75347 17.6569 3.86829C14.5327 0.744098 9.46734 0.744098 6.34315 3.86829C3.21895 6.99249 3.21895 12.0578 6.34315 15.182C9.22833 18.0672 13.769 18.2879 16.9075 15.8442C16.921 15.8595 16.9351 15.8745 16.9497 15.8891L21.1924 20.1317C21.5829 20.5223 22.2161 20.5223 22.6066 20.1317C22.9971 19.7412 22.9971 19.1081 22.6066 18.7175L18.364 14.4749C18.3493 14.4603 18.3343 14.4462 18.319 14.4326ZM16.2426 5.28251C18.5858 7.62565 18.5858 11.4246 16.2426 13.7678C13.8995 16.1109 10.1005 16.1109 7.75736 13.7678C5.41421 11.4246 5.41421 7.62565 7.75736 5.28251C10.1005 2.93936 13.8995 2.93936 16.2426 5.28251Z"
                 fill="currentColor"
               />
             </svg>
-            <span className="hidden md:block">New Chat</span>
-          </label>
-          <input
-            type="text"
-            placeholder="Search new user..."
-            className="daisy-input daisy-input-sm daisy-input-bordered m-0 min-w-0 new-chat-toggle-target-2 transition-all duration-1000 w-0 flex-none p-0 border-0"
-          />
+            <span className="hidden md:block">Search</span>
+          </button>
           <label
             htmlFor="side-bar-toggle"
             className="daisy-btn daisy-btn-square daisy-btn-sm daisy-btn-neutral side-nav-toggle-button absolute sm:relative sm:hidden transition-[left] duration-1000"
@@ -86,43 +86,36 @@ const Sidebar = () => {
             </svg>
           </label>
         </div>
-        <div className="flex-1 overflow-auto">
-          {usersListWithoutCurrentUser.map((e, index) => (
-            <ListItem key={index} data={e} />
+        <div
+          className={`overflow-auto transition-all duration-1000 scroll-smooth h-0 ${
+            isUserListOpen ? "flex-none" : "flex-1"
+          }`}
+        >
+          {conversations.state.map((e, index) => (
+            <ListItemConversation key={index} data={e} users={users.state} />
           ))}
         </div>
-        <button className="daisy-btn m-2">New Chat</button>
+        <button
+          onClick={() => setIsUserListOpen((prev) => !prev)}
+          className="daisy-btn m-2"
+        >
+          {isUserListOpen ? "Back to conversations" : "new Conversation"}
+        </button>
+        <div
+          className={`overflow-auto transition-all duration-1000 scroll-smooth h-0 ${
+            !isUserListOpen ? "flex-none" : "flex-1"
+          }`}
+        >
+          {usersListWithoutCurrentUser.map((e, index) => (
+            <ListItemUser
+              key={index}
+              data={e}
+              onClick={() => setIsUserListOpen((prev) => !prev)}
+            />
+          ))}
+        </div>
       </div>
     </>
   );
 };
 export default Sidebar;
-
-interface ListItemProps {
-  data: UserInterface;
-}
-const ListItem: React.FC<ListItemProps> = ({ data }) => {
-  const navigate = useNavigate();
-  const onOpenChat = () => {
-    navigate(RouteNames.CHAT, { state: "Abhiseck" });
-  };
-
-  return (
-    <div
-      onClick={onOpenChat}
-      className="cursor-pointer flex-none flex h-16 px-2 py-1 text-sm border-y border-y-base-200 hover:bg-base-300 hover:border-y-base-300"
-    >
-      <div className="daisy-avatar daisy-online w-12 h-12 self-center">
-        <div className="w-full rounded-full">
-          <img src="https://dummyimage.com/500x500/4166eb/fff.jpg" />
-        </div>
-      </div>
-      <div className="flex-1 flex flex-col justify-center whitespace-nowrap overflow-hidden ml-2">
-        <div className="font-medium">{data.email}</div>
-        <span className="font-light">
-          Joined on {dayjs(data.createdAt).format("MMMM D, YYYY")}
-        </span>
-      </div>
-    </div>
-  );
-};

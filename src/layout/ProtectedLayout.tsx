@@ -10,7 +10,7 @@ const ProtectedLayout = () => {
   const withLayout = (
     <div className="container mx-auto h-full relative flex flex-col bg-base-100 text-base-content">
       <Header />
-      <div className="flex-1 w-full flex overflow-auto">
+      <div className="flex-1 w-full flex overflow-hidden sm:overflow-auto">
         <Sidebar />
         <Outlet />
       </div>

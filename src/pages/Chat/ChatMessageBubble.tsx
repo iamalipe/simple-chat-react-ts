@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
-import { ChatInterface } from ".";
+import { MessageInterface } from "../../types";
 
 export const ChatMessageBubble: React.FC<{
   self?: boolean;
-  data: ChatInterface;
+  data: MessageInterface;
 }> = ({ data, self }) => {
   const borderClassName = self ? "chat-item-border-self" : "chat-item-border";
 
@@ -12,7 +12,7 @@ export const ChatMessageBubble: React.FC<{
       <>
         <img className={borderClassName} src={data.imageUrl} />
         <span className="text-xs font-normal ml-1 h-0 overflow-hidden transition-[height] duration-500">
-          {dayjs(data.updatedAt).format("MMM D, YYYY h:mm A")}
+          {dayjs(data.createdAt).format("MMM D, YYYY h:mm A")}
         </span>
       </>
     );
@@ -24,7 +24,7 @@ export const ChatMessageBubble: React.FC<{
         {data.message}
       </p>
       <span className="text-xs font-normal ml-1 h-0 overflow-hidden transition-[height] duration-500">
-        {dayjs(data.updatedAt).format("MMM D, YYYY h:mm A")}
+        {dayjs(data.createdAt).format("MMM D, YYYY h:mm A")}
       </span>
     </>
   );

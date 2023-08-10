@@ -1,15 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { ChatInterface, ChatMessageBubble } from ".";
+import { MessageInterface } from "../../types";
+import { ChatMessageBubble } from ".";
 dayjs.extend(relativeTime);
 
-export interface ChatMessageProps {
-  messages: ChatInterface[];
-  username: string;
+export interface ChatMessageSelfProps {
+  messages: MessageInterface[];
 }
 
-export const ChatMessageSelf: React.FC<ChatMessageProps> = ({ messages }) => {
+export const ChatMessageSelf: React.FC<ChatMessageSelfProps> = ({
+  messages,
+}) => {
   return (
     <div className="flex-none flex max-w-[85%] sm:max-w-[65%] ml-auto">
       <div className="p-2 pt-0 flex flex-col">
@@ -27,6 +29,11 @@ export const ChatMessageSelf: React.FC<ChatMessageProps> = ({ messages }) => {
     </div>
   );
 };
+
+export interface ChatMessageProps {
+  messages: MessageInterface[];
+  username: string;
+}
 export const ChatMessage: React.FC<ChatMessageProps> = ({
   messages,
   username,

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useCollection, useRealm, useWatch } from ".";
-import { ConversationInterface } from "../types";
+import { MessageInterface } from "../types";
 import {
   addValueAtIndex,
   createObjectId,
@@ -9,20 +9,24 @@ import {
   updateValueAtIndex,
 } from "../utils";
 
-export const useConversations = () => {
+export const useMessages = (conversationId: string) => {
+  console.log("conversationId", conversationId);
+
+  if (!conversationId) new Error("no conversationId found");
+
   const { currentUser } = useRealm();
-  const [state, setState] = useState<ConversationInterface[]>([]);
+  const [state, setState] = useState<MessageInterface[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const conversationsCollection = useCollection("chatApp", "conversations");
+  const messagesCollection = useCollection("chatApp", "messages");
 
   // Fetch all todos on load and whenever our collection changes (e.g. if the current user changes)
   useEffect(() => {
-    if (!conversationsCollection) return;
+    if (!messagesCollection) return;
     let shouldUpdate = true;
-    const res = conversationsCollection.find({ users: currentUser?.id });
+    const res = messagesCollection.find({ conversationId });
     if (shouldUpdate) {
-      res.then((data: ConversationInterface[]) => {
+      res.then((data: MessageInterface[]) => {
         setState(data);
         setLoading(false);
       });
@@ -30,13 +34,15 @@ export const useConversations = () => {
     return () => {
       shouldUpdate = false;
     };
-  }, [conversationsCollection]);
+  }, [messagesCollection, conversationId]);
 
   // Use a MongoDB change stream to reactively update state when operations succeed
   useWatch(
     {
       onInsert: (change) => {
-        const fullDocument = change.fullDocument as ConversationInterface;
+        console.log("onInsert");
+        const fullDocument = change.fullDocument as MessageInterface;
+        if (fullDocument.conversationId !== conversationId) return;
         setState((prev) => {
           if (loading) return prev;
           const idx = getDocumentIndex(prev, fullDocument) ?? prev.length;
@@ -48,7 +54,8 @@ export const useConversations = () => {
         });
       },
       onUpdate: (change) => {
-        const fullDocument = change.fullDocument as ConversationInterface;
+        const fullDocument = change.fullDocument as MessageInterface;
+        if (fullDocument.conversationId !== conversationId) return;
         setState((prev) => {
           if (loading) return prev;
           const idx = getDocumentIndex(prev, fullDocument);
@@ -59,7 +66,8 @@ export const useConversations = () => {
         });
       },
       onReplace: (change) => {
-        const fullDocument = change.fullDocument as ConversationInterface;
+        const fullDocument = change.fullDocument as MessageInterface;
+        if (fullDocument.conversationId !== conversationId) return;
         setState((prev) => {
           if (loading) return prev;
           const idx = getDocumentIndex(prev, fullDocument);
@@ -68,37 +76,30 @@ export const useConversations = () => {
         });
       },
     },
-    conversationsCollection
+    messagesCollection
+    // { conversationId }
   );
 
-  const createConversation = async (otherUserId: string) => {
-    if (!conversationsCollection) return;
+  const sendMessage = async (message: string, imageUrl?: string) => {
+    if (!messagesCollection) return;
     if (!currentUser) return;
-    setLoading(true);
     try {
-      const usersIds = [currentUser.id, otherUserId].sort();
-      const res = await conversationsCollection.findOne({
-        users: usersIds,
-      });
-      if (res) {
-        return res._id.toString() as string;
-      }
-      const newConversations: ConversationInterface = {
+      const newMessage: MessageInterface = {
         _id: createObjectId(),
-        users: usersIds,
+        senderId: currentUser.id,
         createdAt: new Date(),
         modifyAt: new Date(),
-        isThereNewMessage: false,
+        conversationId: conversationId,
+        message: message,
+        imageUrl: imageUrl || "",
+        isImage: imageUrl !== undefined,
+        isSeen: false,
       };
-
-      await conversationsCollection.insertOne(newConversations);
-      setLoading(false);
-      return newConversations._id.toString() as string;
+      await messagesCollection.insertOne(newMessage);
     } catch (err) {
-      setLoading(false);
       console.error(err);
     }
   };
 
-  return { loading, state, setState, createConversation };
+  return { loading, state, setState, sendMessage };
 };
