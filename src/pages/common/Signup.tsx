@@ -99,6 +99,11 @@ const Signup = () => {
                 {signupError.password}
               </span>
             )}
+            {signupError.other && (
+              <span className="text-error text-sm font-medium ml-2">
+                {signupError.other}
+              </span>
+            )}
           </label>
           <button className="daisy-btn daisy-btn-primary">Sign up</button>
         </form>

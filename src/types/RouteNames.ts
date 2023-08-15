@@ -4,4 +4,5 @@ export enum RouteNames {
   LOGIN = "/login",
   SIGNUP = "/signup",
   CHAT = "/chat",
+  VERIFY = "/verify",
 }

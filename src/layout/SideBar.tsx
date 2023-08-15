@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { useConversations, useRealm, useUsers } from "../hooks";
 import { ListItemConversation, ListItemUser } from "../pages/Chat";
 import { useState } from "react";
@@ -9,6 +10,9 @@ const Sidebar = () => {
 
   const conversations = useConversations();
   const users = useUsers();
+  const conversationsStateSorted = conversations.state.sort((a, b) =>
+    dayjs(b.modifyAt).diff(dayjs(a.modifyAt))
+  );
 
   const usersListWithoutCurrentUser = users.state.filter(
     (e) => e._id !== currentUser?.id
@@ -91,7 +95,7 @@ const Sidebar = () => {
             isUserListOpen ? "flex-none" : "flex-1"
           }`}
         >
-          {conversations.state.map((e, index) => (
+          {conversationsStateSorted.map((e, index) => (
             <ListItemConversation key={index} data={e} users={users.state} />
           ))}
         </div>

@@ -39,8 +39,8 @@ export const Chat = () => {
     }
   }, [locationState]);
 
-  const onSendMessage = async (value: string) => {
-    await messages.sendMessage(value);
+  const onSendMessage = async (value: string, fileArray?: File[]) => {
+    await messages.sendMessage(value, fileArray);
   };
 
   if (!locationState) return <Navigate to={RouteNames.HOME} />;

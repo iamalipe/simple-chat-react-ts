@@ -4,7 +4,11 @@ import App from "./App.tsx";
 import "./styles/index.css";
 import "./styles/customToast.css";
 import { BrowserRouter } from "react-router-dom";
-import { GlobalStateProvider, RealmAppProvider } from "./state";
+import {
+  GlobalStateProvider,
+  ImageKitProvider,
+  RealmAppProvider,
+} from "./state";
 import { atlasConfig } from "./config/atlasConfig.ts";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -12,7 +16,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <RealmAppProvider appId={atlasConfig.appId}>
       <GlobalStateProvider>
         <BrowserRouter>
-          <App />
+          <ImageKitProvider>
+            <App />
+          </ImageKitProvider>
         </BrowserRouter>
       </GlobalStateProvider>
     </RealmAppProvider>

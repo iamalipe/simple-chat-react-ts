@@ -38,6 +38,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
   messages,
   username,
 }) => {
+
   return (
     <div className="flex-none flex max-w-[85%] sm:max-w-[65%]">
       <div className="daisy-avatar daisy-online flex-none w-12 h-12">

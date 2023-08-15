@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useCollection, useRealm, useWatch } from ".";
-import { MessageInterface } from "../types";
+import { ImageKitFileInterface, MessageInterface } from "../types";
 import {
   addValueAtIndex,
   createObjectId,
@@ -8,9 +8,10 @@ import {
   replaceValueAtIndex,
   updateValueAtIndex,
 } from "../utils";
+import { imageUploadApi } from "../services";
 
 export const useMessages = (conversationId: string) => {
-  console.log("conversationId", conversationId);
+  // console.log("conversationId", conversationId);
 
   if (!conversationId) new Error("no conversationId found");
 
@@ -19,6 +20,7 @@ export const useMessages = (conversationId: string) => {
   const [loading, setLoading] = useState(true);
 
   const messagesCollection = useCollection("chatApp", "messages");
+  const conversationsCollection = useCollection("chatApp", "conversations");
 
   // Fetch all todos on load and whenever our collection changes (e.g. if the current user changes)
   useEffect(() => {
@@ -80,10 +82,34 @@ export const useMessages = (conversationId: string) => {
     // { conversationId }
   );
 
-  const sendMessage = async (message: string, imageUrl?: string) => {
+  const sendMessage = async (message: string, fileArray?: File[]) => {
     if (!messagesCollection) return;
     if (!currentUser) return;
     try {
+      const imageKitFileArray: ImageKitFileInterface[] = [];
+
+      if (fileArray && fileArray.length > 0) {
+        const resAll = await Promise.all(
+          fileArray.map((file) =>
+            imageUploadApi({
+              currentUser: currentUser,
+              file: file,
+              folder: `conversations/${conversationId}`,
+            })
+          )
+        );
+        for (const res of resAll)
+          imageKitFileArray.push({
+            fileId: res.fileId,
+            name: res.name,
+            url: res.url,
+            thumbnailUrl: res.thumbnailUrl,
+            size: res.size,
+            filePath: res.filePath,
+            isPrivateFile: res.isPrivateFile,
+          });
+      }
+
       const newMessage: MessageInterface = {
         _id: createObjectId(),
         senderId: currentUser.id,
@@ -91,11 +117,22 @@ export const useMessages = (conversationId: string) => {
         modifyAt: new Date(),
         conversationId: conversationId,
         message: message,
-        imageUrl: imageUrl || "",
-        isImage: imageUrl !== undefined,
         isSeen: false,
+        files: imageKitFileArray,
       };
       await messagesCollection.insertOne(newMessage);
+      await conversationsCollection?.updateOne(
+        { _id: { $oid: newMessage.conversationId } },
+        {
+          $set: {
+            lastMessage: newMessage.message,
+            lastMessageId: newMessage._id,
+            lastMessageTime: newMessage.modifyAt,
+            isThereNewMessage: true,
+            modifyAt: new Date(),
+          },
+        }
+      );
     } catch (err) {
       console.error(err);
     }

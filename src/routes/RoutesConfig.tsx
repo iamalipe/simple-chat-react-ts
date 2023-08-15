@@ -7,6 +7,7 @@ import Login from "../pages/common/Login";
 import Signup from "../pages/common/Signup";
 import { Chat } from "../pages/Chat";
 import Home from "../pages/Home/Home";
+import Verify from "../pages/common/Verify";
 
 const RoutesConfig = () => {
   return (
@@ -24,6 +25,7 @@ const RoutesConfig = () => {
       <Route element={<PublicLayout />}>
         {/* All Normal Routes */}
         <Route path={RouteNames.LOGIN} element={<Login />} />
+        <Route path={RouteNames.VERIFY} element={<Verify />} />
         <Route path={RouteNames.SIGNUP} element={<Signup />} />
         <Route path={"*"} element={<Navigate to={RouteNames.HOME} />} />
       </Route>

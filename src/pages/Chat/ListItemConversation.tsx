@@ -40,7 +40,7 @@ export const ListItemConversation: React.FC<ListItemConversationProps> = ({
       </div>
       <div className="flex-1 flex flex-col justify-center whitespace-nowrap overflow-hidden ml-2">
         <div className="font-medium">{otherUserIdEmail}</div>
-        <span className="font-light">lastMessage</span>
+        <span className="font-light">{data.lastMessage}</span>
         {/* <span className="font-light">{data.lastMessage}</span> */}
       </div>
     </div>
