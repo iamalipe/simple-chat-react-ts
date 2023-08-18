@@ -1,4 +1,5 @@
 export const SettingModal = () => {
+
   return (
     <>
       <dialog id="SettingModal" className="daisy-modal">
@@ -37,6 +38,7 @@ export const SettingModal = () => {
               <label htmlFor="" className="flex flex-col">
                 <span className="font-medium text-lg">Email</span>
                 <input
+                  // value={}
                   type="text"
                   className="daisy-input daisy-input-bordered w-full daisy-input-sm"
                 />

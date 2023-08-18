@@ -1,3 +1,3 @@
-export * from "./GlobalStateProvider";
+export * from "./atoms";
 export * from "./RealmAppProvider";
 export * from "./ImageKitProvider";

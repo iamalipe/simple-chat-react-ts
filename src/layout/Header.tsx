@@ -1,6 +1,9 @@
+import { ThemeChangeButton } from "../components/buttons";
 import { ProfilePopup } from "../components/popups";
+import { useRealm } from "../hooks";
 
 const Header = () => {
+  const { currentUser } = useRealm();
   return (
     <>
       <div className="w-full bg-base-100 border-b border-b-neutral flex-none h-12 flex overflow-auto items-center px-2 md:px-12">
@@ -16,7 +19,7 @@ const Header = () => {
             Offline
           </span>
         )} */}
-        <ProfilePopup />
+        {currentUser ? <ProfilePopup /> : <ThemeChangeButton />}
       </div>
     </>
   );

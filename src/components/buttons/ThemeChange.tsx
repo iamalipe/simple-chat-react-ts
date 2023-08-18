@@ -1,9 +1,9 @@
-import { useLayoutEffect } from "react";
-import { THEMES_OBJECT } from "../../../utils";
 import { useAtom } from "jotai";
-import { themeAtom } from "../../../state";
+import { useLayoutEffect } from "react";
+import { themeAtom } from "../../state";
+import { THEMES_OBJECT } from "../../utils";
 
-export const ThemeProfilePopupItem = () => {
+export const ThemeChangeButton = () => {
   const [theme, setTheme] = useAtom(themeAtom);
 
   const onChangeTheme: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
@@ -18,10 +18,10 @@ export const ThemeProfilePopupItem = () => {
   }, [theme]);
 
   return (
-    <div className="flex items-center gap-4 h-12 border-b border-b-base-300 px-4">
-      <span>Theme</span>
+    <div className="flex sm:gap-4 gap-2 items-center ml-auto">
+      <span className="hidden sm:block">Theme</span>
       <select
-        className="daisy-select daisy-select-bordered daisy-select-sm w-full"
+        className="daisy-select daisy-select-bordered daisy-select-xs sm:daisy-select-sm w-20 sm:w-full max-w-xs"
         onChange={onChangeTheme}
         value={theme}
       >

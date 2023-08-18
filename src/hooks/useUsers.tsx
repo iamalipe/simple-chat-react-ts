@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useCollection, useWatch } from ".";
+import { useCollection, useRealm, useWatch } from ".";
 import { UserInterface } from "../types";
 import {
   addValueAtIndex,
@@ -11,6 +11,8 @@ import {
 export const useUsers = () => {
   const [state, setState] = useState<UserInterface[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const { currentUser } = useRealm();
 
   const usersCollection = useCollection("chatApp", "users");
 
@@ -69,5 +71,15 @@ export const useUsers = () => {
     usersCollection
   );
 
-  return { loading, state, setState };
+  const getCurrentUserInfo = async () => {
+    if (!currentUser) return;
+    try {
+      const userInfo = await usersCollection?.findOne({ _id: currentUser.id });
+      return userInfo as UserInterface;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return { loading, state, setState, getCurrentUserInfo };
 };
