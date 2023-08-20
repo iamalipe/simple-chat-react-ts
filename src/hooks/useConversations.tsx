@@ -30,7 +30,7 @@ export const useConversations = () => {
     return () => {
       shouldUpdate = false;
     };
-  }, [conversationsCollection]);
+  }, [conversationsCollection, currentUser?.id]);
 
   // Use a MongoDB change stream to reactively update state when operations succeed
   useWatch(

@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 import { useState, useEffect } from "react";
-import { ChatInput, ChatMessage, ChatMessageSelf } from ".";
+import { ChatHeader, ChatInput, ChatMessage, ChatMessageSelf } from ".";
 import { Navigate, useLocation } from "react-router-dom";
 import { RouteNames } from "../../types";
 import {
@@ -17,7 +17,6 @@ export const Chat = () => {
   const locationState = location.state;
 
   const { currentUser } = useRealm();
-
   const [conversationId, setConversationId] = useState("");
 
   const conversations = useConversations();
@@ -37,7 +36,12 @@ export const Chat = () => {
     if (location.state.conversationId) {
       setConversationId(location.state.conversationId);
     }
-  }, [locationState]);
+  }, [
+    conversations,
+    location.state.conversationId,
+    location.state.userId,
+    locationState,
+  ]);
 
   const onSendMessage = async (value: string, fileArray?: File[]) => {
     await messages.sendMessage(value, fileArray);
@@ -46,10 +50,11 @@ export const Chat = () => {
   if (!locationState) return <Navigate to={RouteNames.HOME} />;
   return (
     <div className="flex-1 w-full bg-base-100 flex flex-col">
-      <div className="flex-none bg-base-200 h-12 flex items-center px-12 sm:px-6">
-        <h1 className="normal-case text-lg sm:text-xl font-medium whitespace-nowrap">
-          {locationState.title}
-        </h1>
+      <div className="flex-none bg-base-200 h-12 flex items-center pl-12 pr-2 sm:px-6">
+        <ChatHeader
+          conversationId={conversationId}
+          title={locationState.title}
+        />
         {/* <input
           type="text"
           placeholder="Search..."
@@ -57,16 +62,7 @@ export const Chat = () => {
         /> */}
       </div>
       {conversations.loading || messages.loading ? (
-        <div className="p-2 sm:p-5 flex-1 overflow-auto flex flex-col-reverse gap-2">
-          <ChatMessageSkeletonSelf />
-          <ChatMessageSkeletonSelf />
-          <ChatMessageSkeleton />
-          <ChatMessageSkeletonSelf />
-          <ChatMessageSkeleton />
-          <ChatMessageSkeletonSelf />
-          <ChatMessageSkeleton />
-          <ChatMessageSkeleton />
-        </div>
+        <ChatLoadingSkeletons />
       ) : (
         <div className="p-2 sm:p-5 flex-1 overflow-auto flex flex-col gap-2">
           {messagesState.map((e, index) =>
@@ -75,6 +71,7 @@ export const Chat = () => {
             ) : (
               <ChatMessage
                 key={index}
+                isAmLast={index === messagesState.length - 1}
                 messages={e.messages}
                 username={locationState.title as string}
               />
@@ -83,6 +80,21 @@ export const Chat = () => {
         </div>
       )}
       <ChatInput onSendMessage={onSendMessage} />
+    </div>
+  );
+};
+
+const ChatLoadingSkeletons = () => {
+  return (
+    <div className="p-2 sm:p-5 flex-1 overflow-auto flex flex-col-reverse gap-2">
+      <ChatMessageSkeletonSelf />
+      <ChatMessageSkeletonSelf />
+      <ChatMessageSkeleton />
+      <ChatMessageSkeletonSelf />
+      <ChatMessageSkeleton />
+      <ChatMessageSkeletonSelf />
+      <ChatMessageSkeleton />
+      <ChatMessageSkeleton />
     </div>
   );
 };

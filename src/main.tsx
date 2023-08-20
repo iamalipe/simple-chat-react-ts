@@ -8,13 +8,11 @@ import { ImageKitProvider, RealmAppProvider } from "./state";
 import { atlasConfig } from "./config/atlasConfig.ts";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <RealmAppProvider appId={atlasConfig.appId}>
-      <BrowserRouter>
-        <ImageKitProvider>
-          <App />
-        </ImageKitProvider>
-      </BrowserRouter>
-    </RealmAppProvider>
-  </React.StrictMode>
+  <RealmAppProvider appId={atlasConfig.appId}>
+    <BrowserRouter>
+      <ImageKitProvider>
+        <App />
+      </ImageKitProvider>
+    </BrowserRouter>
+  </RealmAppProvider>
 );

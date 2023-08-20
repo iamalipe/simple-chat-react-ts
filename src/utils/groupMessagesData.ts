@@ -28,5 +28,15 @@ export const groupMessagesData = (data: MessageInterface[]) => {
       }
     }
   });
-  return formattedData;
+  const newFormattedData = formattedData.map((e) => {
+    if (e.messages.length > 50) {
+      return {
+        ...e,
+        messages: [e.messages[0], e.messages[e.messages.length - 1]],
+      };
+    } else {
+      return e;
+    }
+  });
+  return newFormattedData;
 };

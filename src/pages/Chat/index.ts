@@ -4,3 +4,4 @@ export * from "./ChatMessageBubble";
 export * from "./ListItemConversation";
 export * from "./ListItemUser";
 export * from "./ChatInput";
+export * from "./ChatHeader";
