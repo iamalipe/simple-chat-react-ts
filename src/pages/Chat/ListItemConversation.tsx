@@ -1,21 +1,22 @@
 import { useNavigate } from "react-router-dom";
-import { ConversationInterface, RouteNames, UserInterface } from "../../types";
+import { ConversationInterface, RouteNames } from "../../types";
 import { useRealm } from "../../hooks";
+import { useAtomValue } from "jotai";
+import { usersAtom } from "../../state";
 // import dayjs from "dayjs";
 
 export interface ListItemConversationProps {
   data: ConversationInterface;
-  users: UserInterface[];
 }
 export const ListItemConversation: React.FC<ListItemConversationProps> = ({
   data,
-  users,
 }) => {
   const navigate = useNavigate();
   const { currentUser } = useRealm();
+  const usersState = useAtomValue(usersAtom);
 
   const otherUserId = data.users.find((e) => e !== currentUser?.id);
-  const otherUserIdEmail = users.find((e) => e._id === otherUserId)?.email;
+  const otherUserIdEmail = usersState.find((e) => e._id === otherUserId)?.email;
 
   const onOpenChat = () => {
     navigate(RouteNames.CHAT, {

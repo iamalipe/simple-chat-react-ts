@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useCollection, useRealm, useWatch } from ".";
 import { ConversationInterface } from "../types";
 import {
@@ -8,11 +8,13 @@ import {
   replaceValueAtIndex,
   updateValueAtIndex,
 } from "../utils";
+import { useAtom, useSetAtom } from "jotai";
+import { conversationsAtom, conversationsLoadingAtom } from "../state";
 
 export const useConversations = () => {
   const { currentUser } = useRealm();
-  const [state, setState] = useState<ConversationInterface[]>([]);
-  const [loading, setLoading] = useState(true);
+  const setState = useSetAtom(conversationsAtom);
+  const [loading, setLoading] = useAtom(conversationsLoadingAtom);
 
   const conversationsCollection = useCollection("chatApp", "conversations");
 
@@ -30,12 +32,13 @@ export const useConversations = () => {
     return () => {
       shouldUpdate = false;
     };
-  }, [conversationsCollection, currentUser?.id]);
+  }, [conversationsCollection, currentUser?.id, setLoading, setState]);
 
   // Use a MongoDB change stream to reactively update state when operations succeed
   useWatch(
     {
       onInsert: (change) => {
+        console.log("onInsert useConversations");
         const fullDocument = change.fullDocument as ConversationInterface;
         setState((prev) => {
           if (loading) return prev;
@@ -48,22 +51,24 @@ export const useConversations = () => {
         });
       },
       onUpdate: (change) => {
+        console.log("onUpdate useConversations");
         const fullDocument = change.fullDocument as ConversationInterface;
         setState((prev) => {
           if (loading) return prev;
           const idx = getDocumentIndex(prev, fullDocument);
-          if (!idx) return prev;
+          if (idx === null) return prev;
           return updateValueAtIndex(prev, idx, () => {
             return fullDocument;
           });
         });
       },
       onReplace: (change) => {
+        console.log("onReplace useConversations");
         const fullDocument = change.fullDocument as ConversationInterface;
         setState((prev) => {
           if (loading) return prev;
           const idx = getDocumentIndex(prev, fullDocument);
-          if (!idx) return prev;
+          if (idx === null) return prev;
           return replaceValueAtIndex(prev, idx, fullDocument);
         });
       },
@@ -74,7 +79,6 @@ export const useConversations = () => {
   const createConversation = async (otherUserId: string) => {
     if (!conversationsCollection) return;
     if (!currentUser) return;
-    setLoading(true);
     try {
       const usersIds = [currentUser.id, otherUserId].sort();
       const res = await conversationsCollection.findOne({
@@ -92,13 +96,11 @@ export const useConversations = () => {
       };
 
       await conversationsCollection.insertOne(newConversations);
-      setLoading(false);
       return newConversations._id.toString() as string;
     } catch (err) {
-      setLoading(false);
       console.error(err);
     }
   };
 
-  return { loading, state, setState, createConversation };
+  return { createConversation };
 };

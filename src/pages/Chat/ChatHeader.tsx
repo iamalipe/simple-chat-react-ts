@@ -1,38 +1,31 @@
-import { useSetAtom } from "jotai";
-import { callAtom, callModalAtom } from "../../state";
-import { VideoCallModal } from "../../components/modals";
+// import { useSetAtom } from "jotai";
+// import { callAtom, callModalAtom } from "../../state";
 
 export interface ChatHeaderProps {
   title: string;
-  conversationId: string;
 }
-export const ChatHeader: React.FC<ChatHeaderProps> = ({
-  title,
-  conversationId,
-}) => {
-  const setCallModalState = useSetAtom(callModalAtom);
-  const setCallState = useSetAtom(callAtom);
+export const ChatHeader: React.FC<ChatHeaderProps> = ({ title }) => {
+  // const setCallModalState = useSetAtom(callModalAtom);
+  // const setCallState = useSetAtom(callAtom);
 
-  const onVideoCall = () => {
-    setCallModalState(true);
-    setCallState({
-      conversationId: conversationId,
-      mode: "OUTGOING",
-    });
-  };
+  // const onVideoCall = () => {
+  //   setCallModalState(true);
+  //   setCallState({
+  //     mode: "OUTGOING",
+  //   });
+  // };
 
   return (
     <>
       <h1 className="normal-case text-lg sm:text-xl font-medium whitespace-nowrap">
         {title}
       </h1>
-      <VideoCallModal />
-      <button
+      {/* <button
         onClick={onVideoCall}
         className="daisy-btn daisy-btn-xs daisy-btn-neutral ml-auto"
       >
         Video Call
-      </button>
+      </button> */}
     </>
   );
 };

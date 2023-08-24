@@ -1,10 +1,20 @@
 import { useCallback, useState } from "react";
 import peerService from "../services/peerService";
 import { useCollection, useRealm } from ".";
-import { CallSessionsModeEnum, MessageInterface } from "../types";
+import {
+  CallSessionsModeEnum,
+  ConversationCallSessionsInterface,
+  ConversationInterface,
+  MessageInterface,
+} from "../types";
 import { createObjectId } from "../utils";
-import { callAtom, callLoadingAtom, callModalAtom } from "../state";
-import { useAtom, useSetAtom } from "jotai";
+import {
+  callAtom,
+  callLoadingAtom,
+  callModalAtom,
+  currentConversationIdAtom,
+} from "../state";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 
 export const useAudioVideoCall = () => {
   const [remoteId, setRemoteId] = useState<string | null>(null);
@@ -15,6 +25,7 @@ export const useAudioVideoCall = () => {
     video: true,
   });
 
+  const currentConversationId = useAtomValue(currentConversationIdAtom);
   const [callState, setCallState] = useAtom(callAtom);
   const setCallModalState = useSetAtom(callModalAtom);
   const { currentUser } = useRealm();
@@ -22,15 +33,13 @@ export const useAudioVideoCall = () => {
 
   const messagesCollection = useCollection("chatApp", "messages");
   const conversationsCollection = useCollection("chatApp", "conversations");
-  console.log("Calling loading", loading);
-  const connectCall = async (conversationId: string) => {
-    if (loading) return;
-    setLoading(true);
+  // console.log("Calling loading", loading);
+  const connectCall = async () => {
+    if (!currentConversationId) return;
     if (!messagesCollection) return;
     if (!currentUser) return;
     try {
       console.log("Calling");
-
       const stream = await navigator.mediaDevices.getUserMedia(
         mediaStreamConfig
       );
@@ -41,33 +50,43 @@ export const useAudioVideoCall = () => {
         senderId: currentUser.id,
         createdAt: new Date(),
         modifyAt: new Date(),
-        conversationId: conversationId,
+        conversationId: currentConversationId,
         message: "connect call",
         isSeen: false,
         files: [],
-        callSessions: {
-          isCall: true,
-          rtcInfo: offerString,
-          mode: CallSessionsModeEnum.CALLING,
-        },
       };
+      const newData: ConversationCallSessionsInterface = {
+        _id: newMessage._id.toString(),
+        callerId: currentUser.id,
+        isCall: true,
+        mode: CallSessionsModeEnum.CALLING,
+        rtcOffer: offerString,
+      };
+
+      await conversationsCollection?.updateOne(
+        { _id: { $oid: currentConversationId } },
+        {
+          $set: {
+            callSessions: newData,
+            modifyAt: new Date(),
+          },
+        }
+      );
+
       await messagesCollection.insertOne(newMessage);
       setCallState((prev) => ({
         ...prev,
         callId: newMessage._id.toString(),
         myStream: stream,
         from: currentUser.id,
+        conversationId: currentConversationId,
       }));
     } catch (err) {
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
   const disconnectCall = async () => {
-    if (loading) return;
-    setLoading(true);
     if (!messagesCollection) return;
     try {
       await messagesCollection.updateOne(
@@ -75,6 +94,15 @@ export const useAudioVideoCall = () => {
         {
           $set: {
             message: "call disconnected",
+            modifyAt: new Date(),
+          },
+        }
+      );
+
+      await conversationsCollection?.updateOne(
+        { _id: { $oid: callState.conversationId } },
+        {
+          $set: {
             callSessions: {
               isCall: false,
             },
@@ -89,8 +117,6 @@ export const useAudioVideoCall = () => {
       setCallModalState(false);
     } catch (err) {
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 

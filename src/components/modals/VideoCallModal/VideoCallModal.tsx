@@ -27,8 +27,8 @@ export const VideoCallModal = () => {
   useEffect(() => {
     if (callModalState) {
       openModal();
-      if (callState.mode === "OUTGOING" && callState.conversationId) {
-        audioVideoCall.connectCall(callState.conversationId);
+      if (callState.mode === "OUTGOING") {
+        audioVideoCall.connectCall();
       }
       if (
         callState.mode === "INCOMING" &&
@@ -54,11 +54,13 @@ export const VideoCallModal = () => {
     } else {
       closeModal();
     }
-  }, [callModalState, callState]);
+  }, [audioVideoCall, callModalState, callState]);
 
   const onCallEnd = async () => {
     console.log("onCallEnd");
-    audioVideoCall.disconnectCall();
+    callState.myStream?.getTracks().forEach((track) => track.stop());
+    callState.otherStream?.getTracks().forEach((track) => track.stop());
+    // audioVideoCall.disconnectCall();
   };
 
   return (

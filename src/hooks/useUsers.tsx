@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useCollection, useRealm, useWatch } from ".";
 import { UserInterface } from "../types";
 import {
@@ -7,10 +7,12 @@ import {
   replaceValueAtIndex,
   updateValueAtIndex,
 } from "../utils";
+import { useSetAtom, useAtom } from "jotai";
+import { usersAtom, usersLoadingAtom } from "../state";
 
 export const useUsers = () => {
-  const [state, setState] = useState<UserInterface[]>([]);
-  const [loading, setLoading] = useState(true);
+  const setState = useSetAtom(usersAtom);
+  const [loading, setLoading] = useAtom(usersLoadingAtom);
 
   const { currentUser } = useRealm();
 
@@ -30,7 +32,7 @@ export const useUsers = () => {
     return () => {
       shouldUpdate = false;
     };
-  }, [usersCollection]);
+  }, [setLoading, setState, usersCollection]);
 
   // Use a MongoDB change stream to reactively update state when operations succeed
   useWatch(
@@ -52,7 +54,7 @@ export const useUsers = () => {
         setState((prev) => {
           if (loading) return prev;
           const idx = getDocumentIndex(prev, fullDocument);
-          if (!idx) return prev;
+          if (idx === null) return prev;
           return updateValueAtIndex(prev, idx, () => {
             return fullDocument;
           });
@@ -63,7 +65,7 @@ export const useUsers = () => {
         setState((prev) => {
           if (loading) return prev;
           const idx = getDocumentIndex(prev, fullDocument);
-          if (!idx) return prev;
+          if (idx === null) return prev;
           return replaceValueAtIndex(prev, idx, fullDocument);
         });
       },
@@ -81,5 +83,5 @@ export const useUsers = () => {
     }
   };
 
-  return { loading, state, setState, getCurrentUserInfo };
+  return { getCurrentUserInfo };
 };

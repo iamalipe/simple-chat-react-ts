@@ -1,11 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import dayjs from "dayjs";
-import { useEffect } from "react";
 import { MessageInterface } from "../../types";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { ChatMessageBubble } from ".";
-import { CallAtomInterface, callAtom, callModalAtom } from "../../state";
-import { useSetAtom } from "jotai";
 dayjs.extend(relativeTime);
 
 export interface ChatMessageSelfProps {
@@ -41,35 +38,7 @@ export interface ChatMessageProps {
 export const ChatMessage: React.FC<ChatMessageProps> = ({
   messages,
   username,
-  isAmLast,
 }) => {
-  const setCallModalState = useSetAtom(callModalAtom);
-  const setCallState = useSetAtom(callAtom);
-
-  useEffect(() => {
-    if (isAmLast) {
-      const lastMessage = messages[messages.length - 1];
-      if (!lastMessage.callSessions) return;
-      if (lastMessage.callSessions.isCall) {
-        setCallModalState(true);
-        const data: CallAtomInterface = {
-          callId: lastMessage._id.toString(),
-          from: lastMessage.senderId,
-          offer: JSON.parse(lastMessage.callSessions.rtcInfo),
-          ans: lastMessage.callSessions.rtcAns
-            ? JSON.parse(lastMessage.callSessions.rtcAns)
-            : undefined,
-          rtcMode: lastMessage.callSessions.mode,
-          mode: "INCOMING",
-        };
-        setCallState((prev) => ({
-          ...prev,
-          ...data,
-        }));
-      }
-    }
-  }, [isAmLast, messages, setCallModalState, setCallState]);
-
   return (
     <div className="flex-none flex max-w-[85%] sm:max-w-[65%]">
       <div className="daisy-avatar daisy-online flex-none w-12 h-12">

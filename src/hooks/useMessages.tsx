@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useCollection, useRealm, useWatch } from ".";
 import { ImageKitFileInterface, MessageInterface } from "../types";
 import {
@@ -9,24 +9,29 @@ import {
   updateValueAtIndex,
 } from "../utils";
 import { imageUploadApi } from "../services";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import {
+  currentConversationIdAtom,
+  messagesAtom,
+  messagesLoadingAtom,
+} from "../state";
 
-export const useMessages = (conversationId: string) => {
-  // console.log("conversationId", conversationId);
-
-  if (!conversationId) new Error("no conversationId found");
-
+export const useMessages = () => {
   const { currentUser } = useRealm();
-  const [state, setState] = useState<MessageInterface[]>([]);
-  const [loading, setLoading] = useState(true);
+  const setState = useSetAtom(messagesAtom);
+  const [loading, setLoading] = useAtom(messagesLoadingAtom);
+  const currentConversationId = useAtomValue(currentConversationIdAtom);
 
   const messagesCollection = useCollection("chatApp", "messages");
   const conversationsCollection = useCollection("chatApp", "conversations");
 
-  // Fetch all todos on load and whenever our collection changes (e.g. if the current user changes)
   useEffect(() => {
     if (!messagesCollection) return;
+    if (!currentConversationId) return;
     let shouldUpdate = true;
-    const res = messagesCollection.find({ conversationId });
+    const res = messagesCollection.find({
+      conversationId: currentConversationId,
+    });
     if (shouldUpdate) {
       res.then((data: MessageInterface[]) => {
         setState(data);
@@ -36,15 +41,16 @@ export const useMessages = (conversationId: string) => {
     return () => {
       shouldUpdate = false;
     };
-  }, [messagesCollection, conversationId]);
+  }, [messagesCollection, currentConversationId, setState, setLoading]);
 
   // Use a MongoDB change stream to reactively update state when operations succeed
   useWatch(
     {
       onInsert: (change) => {
-        console.log("onInsert");
+        if (!currentConversationId) return;
+        console.log("onInsert useMessages", currentConversationId);
         const fullDocument = change.fullDocument as MessageInterface;
-        if (fullDocument.conversationId !== conversationId) return;
+        if (fullDocument.conversationId !== currentConversationId) return;
         setState((prev) => {
           if (loading) return prev;
           const idx = getDocumentIndex(prev, fullDocument) ?? prev.length;
@@ -56,35 +62,39 @@ export const useMessages = (conversationId: string) => {
         });
       },
       onUpdate: (change) => {
+        if (!currentConversationId) return;
+        console.log("onUpdate useMessages");
         const fullDocument = change.fullDocument as MessageInterface;
-        if (fullDocument.conversationId !== conversationId) return;
+        if (fullDocument.conversationId !== currentConversationId) return;
         setState((prev) => {
           if (loading) return prev;
           const idx = getDocumentIndex(prev, fullDocument);
-          if (!idx) return prev;
+          if (idx === null) return prev;
           return updateValueAtIndex(prev, idx, () => {
             return fullDocument;
           });
         });
       },
       onReplace: (change) => {
+        if (!currentConversationId) return;
+        console.log("onReplace useMessages");
         const fullDocument = change.fullDocument as MessageInterface;
-        if (fullDocument.conversationId !== conversationId) return;
+        if (fullDocument.conversationId !== currentConversationId) return;
         setState((prev) => {
           if (loading) return prev;
           const idx = getDocumentIndex(prev, fullDocument);
-          if (!idx) return prev;
+          if (idx === null) return prev;
           return replaceValueAtIndex(prev, idx, fullDocument);
         });
       },
     },
     messagesCollection
-    // { conversationId }
   );
 
   const sendMessage = async (message: string, fileArray?: File[]) => {
     if (!messagesCollection) return;
     if (!currentUser) return;
+    if (!currentConversationId) return;
     try {
       const imageKitFileArray: ImageKitFileInterface[] = [];
 
@@ -94,7 +104,7 @@ export const useMessages = (conversationId: string) => {
             imageUploadApi({
               currentUser: currentUser,
               file: file,
-              folder: `conversations/${conversationId}`,
+              folder: `conversations/${currentConversationId}`,
             })
           )
         );
@@ -115,7 +125,7 @@ export const useMessages = (conversationId: string) => {
         senderId: currentUser.id,
         createdAt: new Date(),
         modifyAt: new Date(),
-        conversationId: conversationId,
+        conversationId: currentConversationId,
         message: message,
         isSeen: false,
         files: imageKitFileArray,
@@ -138,5 +148,5 @@ export const useMessages = (conversationId: string) => {
     }
   };
 
-  return { loading, state, setState, sendMessage };
+  return { sendMessage };
 };

@@ -2,21 +2,15 @@ import dayjs from "dayjs";
 import { useConversations, useRealm, useUsers } from "../hooks";
 import { ListItemConversation, ListItemUser } from "../pages/Chat";
 import { useState } from "react";
+import { useAtomValue } from "jotai";
+import { conversationsAtom, usersAtom } from "../state";
+// import { VideoCallModal } from "../components/modals";
 
 const Sidebar = () => {
-  const { currentUser } = useRealm();
   const [searchValue, setSearchValue] = useState("");
   const [isUserListOpen, setIsUserListOpen] = useState(false);
-
-  const conversations = useConversations();
-  const users = useUsers();
-  const conversationsStateSorted = conversations.state.sort((a, b) =>
-    dayjs(b.modifyAt).diff(dayjs(a.modifyAt))
-  );
-
-  const usersListWithoutCurrentUser = users.state.filter(
-    (e) => e._id !== currentUser?.id
-  );
+  useUsers();
+  useConversations();
 
   const onSearchValueChange: React.ChangeEventHandler<HTMLInputElement> = (
     e
@@ -26,6 +20,9 @@ const Sidebar = () => {
 
   const onSearchClick = () => {
     console.log("onSearchClick");
+  };
+  const onIsUserListChange = () => {
+    setIsUserListOpen((prev) => !prev);
   };
 
   return (
@@ -95,9 +92,7 @@ const Sidebar = () => {
             isUserListOpen ? "flex-none" : "flex-1"
           }`}
         >
-          {conversationsStateSorted.map((e, index) => (
-            <ListItemConversation key={index} data={e} users={users.state} />
-          ))}
+          <RenderListItemConversation />
         </div>
         <button
           onClick={() => setIsUserListOpen((prev) => !prev)}
@@ -110,16 +105,46 @@ const Sidebar = () => {
             !isUserListOpen ? "flex-none" : "flex-1"
           }`}
         >
-          {usersListWithoutCurrentUser.map((e, index) => (
-            <ListItemUser
-              key={index}
-              data={e}
-              onClick={() => setIsUserListOpen((prev) => !prev)}
-            />
-          ))}
+          <RenderListItemUser onIsUserListChange={onIsUserListChange} />
         </div>
+        {/* <VideoCallModal /> */}
       </div>
     </>
   );
 };
 export default Sidebar;
+
+const RenderListItemConversation = () => {
+  const conversationsState = useAtomValue(conversationsAtom);
+  const conversationsStateSorted = conversationsState.sort((a, b) =>
+    dayjs(b.modifyAt).diff(dayjs(a.modifyAt))
+  );
+  return (
+    <>
+      {conversationsStateSorted.map((e, index) => (
+        <ListItemConversation key={index} data={e} />
+      ))}
+    </>
+  );
+};
+
+interface RenderListItemUserProps {
+  onIsUserListChange: () => void;
+}
+const RenderListItemUser: React.FC<RenderListItemUserProps> = ({
+  onIsUserListChange,
+}) => {
+  const { currentUser } = useRealm();
+  const usersState = useAtomValue(usersAtom);
+
+  const usersListWithoutCurrentUser = usersState.filter(
+    (e) => e._id !== currentUser?.id
+  );
+  return (
+    <>
+      {usersListWithoutCurrentUser.map((e, index) => (
+        <ListItemUser key={index} data={e} onClick={onIsUserListChange} />
+      ))}
+    </>
+  );
+};
