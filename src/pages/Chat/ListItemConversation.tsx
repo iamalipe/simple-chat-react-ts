@@ -16,7 +16,8 @@ export const ListItemConversation: React.FC<ListItemConversationProps> = ({
   const usersState = useAtomValue(usersAtom);
 
   const otherUserId = data.users.find((e) => e !== currentUser?.id);
-  const otherUserIdEmail = usersState.find((e) => e._id === otherUserId)?.email;
+  const otherUserIdInfo = usersState.find((e) => e._id === otherUserId);
+  const otherUserIdEmail = otherUserIdInfo?.email;
 
   const onOpenChat = () => {
     navigate(RouteNames.CHAT, {
@@ -24,6 +25,7 @@ export const ListItemConversation: React.FC<ListItemConversationProps> = ({
         conversationId: data._id.toString(),
         userId: undefined,
         title: otherUserIdEmail,
+        otherUserInfo: otherUserIdInfo,
       },
     });
     document.getElementById("side-bar-toggle")?.click();

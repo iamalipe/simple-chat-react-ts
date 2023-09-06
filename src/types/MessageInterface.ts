@@ -9,7 +9,12 @@ export interface MessageInterface extends Realm.Services.MongoDB.Document {
   message: string;
   senderId: string;
   isSeen: boolean;
+  type: "MESSAGE" | "CALL";
+  isDisplay: boolean;
+  isDelete: false;
   files: ImageKitFileInterface[];
+  callEnd?: Date;
+  callStart?: Date;
 }
 
 export interface MessagesGroupInterface {

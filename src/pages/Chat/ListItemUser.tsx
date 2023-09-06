@@ -13,7 +13,12 @@ export const ListItemUser: React.FC<ListItemUserProps> = ({
   const navigate = useNavigate();
   const onOpenChat = () => {
     navigate(RouteNames.CHAT, {
-      state: { conversationId: undefined, userId: data._id, title: data.email },
+      state: {
+        conversationId: undefined,
+        userId: data._id,
+        title: data.email,
+        otherUserInfo: data,
+      },
     });
     onClick();
     document.getElementById("side-bar-toggle")?.click();

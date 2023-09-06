@@ -128,6 +128,9 @@ export const useMessages = () => {
         conversationId: currentConversationId,
         message: message,
         isSeen: false,
+        isDelete: false,
+        isDisplay: true,
+        type: "MESSAGE",
         files: imageKitFileArray,
       };
       await messagesCollection.insertOne(newMessage);

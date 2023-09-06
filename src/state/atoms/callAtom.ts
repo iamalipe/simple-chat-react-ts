@@ -1,20 +1,15 @@
 import { atom } from "jotai";
-import { CallSessionsModeEnum } from "../../types";
+import { ConversationCallSessionsInterface, UserInterface } from "../../types";
 
 export interface CallAtomInterface {
-  callId?: string;
+  conversationId: string;
+  otherUser: UserInterface;
+  isIamCalling: boolean;
   myStream?: MediaStream;
-  otherStream?: MediaStream;
-  from?: string;
-  conversationId?: string;
-  offer?: RTCSessionDescription;
-  ans?: RTCSessionDescription;
-  rtcMode?: CallSessionsModeEnum;
-  mode?: "INCOMING" | "OUTGOING";
+  remoteStream?: MediaStream;
 }
 
-export const callAtom = atom<CallAtomInterface>({});
-
-export const callModalAtom = atom(false);
-
-export const callLoadingAtom = atom(false);
+export const callAtom = atom<CallAtomInterface | null>(null);
+export const callSessionsAtom = atom<ConversationCallSessionsInterface | null>(
+  null
+);

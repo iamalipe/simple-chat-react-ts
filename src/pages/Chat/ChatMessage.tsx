@@ -33,7 +33,6 @@ export const ChatMessageSelf: React.FC<ChatMessageSelfProps> = ({
 export interface ChatMessageProps {
   messages: MessageInterface[];
   username: string;
-  isAmLast: boolean;
 }
 export const ChatMessage: React.FC<ChatMessageProps> = ({
   messages,

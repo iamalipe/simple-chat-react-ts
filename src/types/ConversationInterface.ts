@@ -1,11 +1,5 @@
 import { createObjectId } from "./../utils/realmUtilsFunctions";
 
-export enum CallSessionsModeEnum {
-  "CALLING" = "CALLING",
-  "ACCEPTING" = "ACCEPTING",
-  "ACCEPTED" = "ACCEPTED",
-  "REJECT" = "REJECT",
-}
 export interface ConversationInterface extends Realm.Services.MongoDB.Document {
   _id: string | ReturnType<typeof createObjectId>;
   createdAt: Date;
@@ -19,11 +13,20 @@ export interface ConversationInterface extends Realm.Services.MongoDB.Document {
 }
 
 export interface ConversationCallSessionsInterface {
-  callerId: string;
-  _id: string;
+  callStart: Date;
+  messageRefId: string;
   isCall: boolean;
+  from: string;
+  mode:
+    | "CALLING"
+    | "ACCEPTING"
+    | "ACCEPTED"
+    | "REJECT"
+    | "NEGOTIATION"
+    | "NEGOTIATION_ANSWER"
+    | "CONNECTED";
   rtcOffer: string;
-  rtcAns?: string;
-  rtcNego?: string;
-  mode: CallSessionsModeEnum;
+  rtcAnswer?: string;
+  rtcNegotiation?: string;
+  rtcNegotiationAnswer?: string;
 }

@@ -1,25 +1,16 @@
-import { useCallback, useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import peerService from "../services/peerService";
 import { useCollection, useRealm } from ".";
-import {
-  CallSessionsModeEnum,
-  ConversationCallSessionsInterface,
-  ConversationInterface,
-  MessageInterface,
-} from "../types";
-import { createObjectId } from "../utils";
+import { ConversationCallSessionsInterface, MessageInterface } from "../types";
+import { createObjectId, toast } from "../utils";
 import {
   callAtom,
-  callLoadingAtom,
-  callModalAtom,
+  callSessionsAtom,
   currentConversationIdAtom,
 } from "../state";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 
 export const useAudioVideoCall = () => {
-  const [remoteId, setRemoteId] = useState<string | null>(null);
-  const [myStream, setMyStream] = useState<MediaStream | null>(null);
-  const [remoteStream, setRemoteStream] = useState();
   const [mediaStreamConfig, setMediaStreamConfig] = useState({
     audio: true,
     video: true,
@@ -27,40 +18,60 @@ export const useAudioVideoCall = () => {
 
   const currentConversationId = useAtomValue(currentConversationIdAtom);
   const [callState, setCallState] = useAtom(callAtom);
-  const setCallModalState = useSetAtom(callModalAtom);
+  const [callSessionsState, setCallSessionsState] = useAtom(callSessionsAtom);
   const { currentUser } = useRealm();
-  const [loading, setLoading] = useAtom(callLoadingAtom);
 
   const messagesCollection = useCollection("chatApp", "messages");
   const conversationsCollection = useCollection("chatApp", "conversations");
-  // console.log("Calling loading", loading);
+
+  useEffect(() => {
+    if (!peerService.peer) return;
+    peerService.peer.addEventListener("track", async (ev) => {
+      const remoteStream = ev.streams;
+      setCallState((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          remoteStream: remoteStream[0],
+        };
+      });
+    });
+  }, [setCallState]);
+
   const connectCall = async () => {
+    if (!callState) return;
     if (!currentConversationId) return;
     if (!messagesCollection) return;
     if (!currentUser) return;
     try {
-      console.log("Calling");
       const stream = await navigator.mediaDevices.getUserMedia(
         mediaStreamConfig
       );
       const rtcSession = await peerService.getOffer();
       const offerString = JSON.stringify(rtcSession);
+      const callStart = new Date();
       const newMessage: MessageInterface = {
         _id: createObjectId(),
         senderId: currentUser.id,
         createdAt: new Date(),
         modifyAt: new Date(),
         conversationId: currentConversationId,
-        message: "connect call",
+        message: "CALLING",
+        isDelete: false,
+        isDisplay: false,
+        type: "CALL",
         isSeen: false,
         files: [],
+        callStart: callStart,
+        callEnd: callStart,
       };
       const newData: ConversationCallSessionsInterface = {
-        _id: newMessage._id.toString(),
-        callerId: currentUser.id,
+        messageRefId: newMessage._id.toString(),
+        from: currentUser.id,
         isCall: true,
-        mode: CallSessionsModeEnum.CALLING,
+        mode: "CALLING",
         rtcOffer: offerString,
+        callStart: callStart,
       };
 
       await conversationsCollection?.updateOne(
@@ -72,27 +83,31 @@ export const useAudioVideoCall = () => {
           },
         }
       );
-
       await messagesCollection.insertOne(newMessage);
-      setCallState((prev) => ({
-        ...prev,
-        callId: newMessage._id.toString(),
-        myStream: stream,
-        from: currentUser.id,
-        conversationId: currentConversationId,
-      }));
+      const newState = { ...callState };
+      newState.myStream = stream;
+      setCallState(newState);
     } catch (err) {
       console.error(err);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const errorMessage = err.message;
+      toast(errorMessage);
+      setCallState(null);
+      setCallSessionsState(null);
     }
   };
 
   const disconnectCall = async () => {
     if (!messagesCollection) return;
+    if (!callSessionsState) return;
+    if (!callState) return;
     try {
       await messagesCollection.updateOne(
-        { _id: { $oid: callState.callId } },
+        { _id: { $oid: callSessionsState?.messageRefId } },
         {
           $set: {
+            isDisplay: true,
             message: "call disconnected",
             modifyAt: new Date(),
           },
@@ -112,112 +127,360 @@ export const useAudioVideoCall = () => {
       );
 
       callState.myStream?.getTracks().forEach((track) => track.stop());
-      callState.otherStream?.getTracks().forEach((track) => track.stop());
-      setCallState({});
-      setCallModalState(false);
+      callState.remoteStream?.getTracks().forEach((track) => track.stop());
+      setCallState(null);
+      setCallSessionsState(null);
     } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const errorMessage = err.message;
+      toast(errorMessage);
       console.error(err);
+      setCallState(null);
+      setCallSessionsState(null);
     }
   };
 
-  const acceptIncomingCall = async (data: {
-    from: string;
-    offer: RTCSessionDescription;
-    callId: string;
-  }) => {
-    if (loading) return;
-    setLoading(true);
+  const callEnd = async () => {
+    if (!messagesCollection) return;
+    if (!callSessionsState) return;
+    if (!callState) return;
+    try {
+      await messagesCollection.updateOne(
+        { _id: { $oid: callSessionsState.messageRefId } },
+        {
+          $set: {
+            isDisplay: true,
+            message: "call end",
+            callEnd: new Date(),
+            modifyAt: new Date(),
+          },
+        }
+      );
+
+      await conversationsCollection?.updateOne(
+        { _id: { $oid: callState.conversationId } },
+        {
+          $set: {
+            callSessions: {
+              isCall: false,
+            },
+            modifyAt: new Date(),
+          },
+        }
+      );
+
+      callState.myStream?.getTracks().forEach((track) => track.stop());
+      callState.remoteStream?.getTracks().forEach((track) => track.stop());
+      setCallState(null);
+      setCallSessionsState(null);
+    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const errorMessage = err.message;
+      toast(errorMessage);
+      console.error(err);
+      setCallState(null);
+      setCallSessionsState(null);
+    }
+  };
+
+  const callReject = async () => {
+    if (!messagesCollection) return;
+    if (!callState) return;
+    if (!callSessionsState) return;
+    try {
+      await messagesCollection.updateOne(
+        { _id: { $oid: callSessionsState.messageRefId } },
+        {
+          $set: {
+            message: "call rejected",
+            isDisplay: true,
+            modifyAt: new Date(),
+          },
+        }
+      );
+
+      await conversationsCollection?.updateOne(
+        { _id: { $oid: callState.conversationId } },
+        {
+          $set: {
+            callSessions: {
+              isCall: false,
+            },
+            modifyAt: new Date(),
+          },
+        }
+      );
+
+      callState.myStream?.getTracks().forEach((track) => track.stop());
+      callState.remoteStream?.getTracks().forEach((track) => track.stop());
+      setCallState(null);
+      setCallSessionsState(null);
+    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const errorMessage = err.message;
+      toast(errorMessage);
+      console.error(err);
+      setCallState(null);
+      setCallSessionsState(null);
+    }
+  };
+
+  const acceptIncomingCall = async () => {
+    if (!callState) return;
+    if (!callSessionsState) return;
     if (!messagesCollection) return;
     try {
-      const { from, callId, offer } = data;
       const stream = await navigator.mediaDevices.getUserMedia(
         mediaStreamConfig
       );
-      const rtcAns = await peerService.getAnswer(offer);
+      const rtcOffer = JSON.parse(callSessionsState.rtcOffer);
+      const rtcAnswer = await peerService.getAnswer(rtcOffer);
       await messagesCollection.updateOne(
-        { _id: { $oid: callId } },
+        { _id: { $oid: callSessionsState.messageRefId } },
         {
           $set: {
-            message: "call accepting",
-            callSessions: {
-              rtcAns: JSON.stringify(rtcAns),
-              mode: CallSessionsModeEnum.ACCEPTING,
-            },
+            message: "ACCEPTING",
+            modifyAt: new Date(),
+          },
+        }
+      );
+      const newData: ConversationCallSessionsInterface = {
+        ...callSessionsState,
+        rtcAnswer: JSON.stringify(rtcAnswer),
+        mode: "ACCEPTING",
+      };
+
+      await conversationsCollection?.updateOne(
+        { _id: { $oid: callState.conversationId } },
+        {
+          $set: {
+            callSessions: newData,
             modifyAt: new Date(),
           },
         }
       );
 
-      console.log(`Incoming Call`, from, offer, rtcAns);
-      setCallState((prev) => ({
-        ...prev,
-        callId: callId,
-        myStream: stream,
-        from: from,
-      }));
+      const newState = { ...callState };
+      newState.myStream = stream;
+      setCallState(newState);
     } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const errorMessage = err.message;
+      toast(errorMessage);
       console.error(err);
-    } finally {
-      setLoading(false);
+      setCallState(null);
+      setCallSessionsState(null);
     }
   };
 
-  const callAccepted = async (data: { ans: RTCSessionDescription }) => {
-    if (loading) return;
-    setLoading(true);
-    const { ans } = data;
-    if (!messagesCollection) return;
+  const callAccepted = async () => {
+    if (!callState) return;
+    if (!callSessionsState) return;
     if (!callState.myStream) return;
+    if (!messagesCollection) return;
     try {
-      peerService.setLocalDescription(ans);
-      console.log("Call Accepted!", ans);
+      const rtcAnswer = JSON.parse(callSessionsState.rtcAnswer || "");
+      await peerService.setLocalDescription(rtcAnswer);
       await messagesCollection.updateOne(
-        { _id: { $oid: callState.callId } },
+        { _id: { $oid: callSessionsState.messageRefId } },
         {
           $set: {
-            message: "call accepted",
-            callSessions: {
-              mode: CallSessionsModeEnum.ACCEPTED,
-            },
+            message: "ACCEPTED",
             modifyAt: new Date(),
           },
         }
       );
-      for (const track of callState.myStream.getTracks()) {
-        if (!peerService.peer) return;
-        peerService.peer.addTrack(track, callState.myStream);
-      }
+      const newData: ConversationCallSessionsInterface = {
+        ...callSessionsState,
+        mode: "ACCEPTED",
+      };
+      await conversationsCollection?.updateOne(
+        { _id: { $oid: callState.conversationId } },
+        {
+          $set: {
+            callSessions: newData,
+            modifyAt: new Date(),
+          },
+        }
+      );
+      sendStream();
     } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const errorMessage = err.message;
+      toast(errorMessage);
       console.error(err);
-    } finally {
-      setLoading(false);
+      setCallState(null);
+      setCallSessionsState(null);
     }
   };
 
-  const handleNegoNeeded = useCallback(async () => {
-    const offer = await peerService.getOffer();
-    // socket.emit("peer:nego:needed", { offer, to: remoteSocketId });
-  }, [remoteId]);
+  const sendNegotiation = useCallback(async () => {
+    if (!callState) return;
+    if (!callSessionsState) return;
+    if (!callState.myStream) return;
+    if (!messagesCollection) return;
+    try {
+      const rtcNegotiation = await peerService.getOffer();
+      await messagesCollection.updateOne(
+        { _id: { $oid: callSessionsState.messageRefId } },
+        {
+          $set: {
+            message: "NEGOTIATION",
+            modifyAt: new Date(),
+          },
+        }
+      );
+      const newData: ConversationCallSessionsInterface = {
+        ...callSessionsState,
+        mode: "NEGOTIATION",
+        rtcNegotiation: JSON.stringify(rtcNegotiation),
+      };
+      await conversationsCollection?.updateOne(
+        { _id: { $oid: callState.conversationId } },
+        {
+          $set: {
+            callSessions: newData,
+            modifyAt: new Date(),
+          },
+        }
+      );
+    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const errorMessage = err.message;
+      toast(errorMessage);
+      console.error(err);
+      setCallState(null);
+      setCallSessionsState(null);
+    }
+  }, [
+    callSessionsState,
+    callState,
+    conversationsCollection,
+    messagesCollection,
+    setCallSessionsState,
+    setCallState,
+  ]);
 
-  const handleNegoNeedIncomming = useCallback(
-    async ({ from, offer }: { from: string; offer: RTCSessionDescription }) => {
-      const ans = await peerService.getAnswer(offer);
-      // socket.emit("peer:nego:done", { to: from, ans });
-    },
-    []
-  );
+  const negotiationAnswer = async () => {
+    if (!callState) return;
+    if (!callSessionsState) return;
+    if (!callState.myStream) return;
+    if (!messagesCollection) return;
+    try {
+      const rtcNegotiation = JSON.parse(callSessionsState.rtcNegotiation || "");
+      const rtcNegotiationAnswer = await peerService.getAnswer(rtcNegotiation);
+      await messagesCollection.updateOne(
+        { _id: { $oid: callSessionsState.messageRefId } },
+        {
+          $set: {
+            message: "NEGOTIATION_ANSWER",
+            modifyAt: new Date(),
+          },
+        }
+      );
+      const newData: ConversationCallSessionsInterface = {
+        ...callSessionsState,
+        mode: "NEGOTIATION_ANSWER",
+        rtcNegotiationAnswer: JSON.stringify(rtcNegotiationAnswer),
+      };
+      await conversationsCollection?.updateOne(
+        { _id: { $oid: callState.conversationId } },
+        {
+          $set: {
+            callSessions: newData,
+            modifyAt: new Date(),
+          },
+        }
+      );
+    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const errorMessage = err.message;
+      toast(errorMessage);
+      console.error(err);
+      setCallState(null);
+      setCallSessionsState(null);
+    }
+  };
 
-  const handleNegoNeedFinal = useCallback(
-    async ({ ans }: { ans: RTCSessionDescription }) => {
-      await peerService.setLocalDescription(ans);
-    },
-    []
-  );
+  const negotiationFinal = async () => {
+    if (!callState) return;
+    if (!callSessionsState) return;
+    if (!callState.myStream) return;
+    if (!messagesCollection) return;
+    try {
+      const rtcNegotiationAnswer = JSON.parse(
+        callSessionsState.rtcNegotiationAnswer || ""
+      );
+      await peerService.setLocalDescription(rtcNegotiationAnswer);
+      await messagesCollection.updateOne(
+        { _id: { $oid: callSessionsState.messageRefId } },
+        {
+          $set: {
+            message: "CONNECTED",
+            modifyAt: new Date(),
+          },
+        }
+      );
+      const newData: ConversationCallSessionsInterface = {
+        ...callSessionsState,
+        mode: "CONNECTED",
+      };
+      await conversationsCollection?.updateOne(
+        { _id: { $oid: callState.conversationId } },
+        {
+          $set: {
+            callSessions: newData,
+            modifyAt: new Date(),
+          },
+        }
+      );
+    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const errorMessage = err.message;
+      toast(errorMessage);
+      console.error(err);
+      setCallState(null);
+      setCallSessionsState(null);
+    }
+  };
+
+  const sendStream = () => {
+    if (!callState) return;
+    if (!callState.myStream) return;
+    for (const track of callState.myStream.getTracks()) {
+      if (!peerService.peer) return;
+      peerService.peer.addTrack(track, callState.myStream);
+    }
+  };
+
+  useEffect(() => {
+    peerService?.peer?.addEventListener("negotiationneeded", sendNegotiation);
+    return () => {
+      peerService?.peer?.removeEventListener(
+        "negotiationneeded",
+        sendNegotiation
+      );
+    };
+  }, [sendNegotiation]);
 
   return {
     connectCall,
     disconnectCall,
+    callReject,
     acceptIncomingCall,
     callAccepted,
+    sendNegotiation,
+    negotiationAnswer,
+    negotiationFinal,
+    callEnd,
+    sendStream,
   };
 };
