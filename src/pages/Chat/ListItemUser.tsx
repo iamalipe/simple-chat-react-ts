@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { RouteNames, UserInterface } from "../../types";
 import dayjs from "dayjs";
+import { IKImage } from "imagekitio-react";
 
 export interface ListItemUserProps {
   data: UserInterface;
@@ -16,7 +17,7 @@ export const ListItemUser: React.FC<ListItemUserProps> = ({
       state: {
         conversationId: undefined,
         userId: data._id,
-        title: data.email,
+        title: data.fullName || data.email,
         otherUserInfo: data,
       },
     });
@@ -31,11 +32,15 @@ export const ListItemUser: React.FC<ListItemUserProps> = ({
     >
       <div className="daisy-avatar daisy-online w-12 h-12 self-center">
         <div className="w-full rounded-full">
-          <img src="https://dummyimage.com/500x500/4166eb/fff.jpg" />
+          {data?.profileImage ? (
+            <IKImage path={data?.profileImage.filePath} loading="lazy" />
+          ) : (
+            <img src="https://dummyimage.com/1000x1000/000/fff" alt="" />
+          )}
         </div>
       </div>
       <div className="flex-1 flex flex-col justify-center whitespace-nowrap overflow-hidden ml-2">
-        <div className="font-medium">{data.email}</div>
+        <div className="font-medium">{data.fullName || data.email}</div>
         <span className="font-light">
           Joined on {dayjs(data.createdAt).format("MMMM D, YYYY")}
         </span>

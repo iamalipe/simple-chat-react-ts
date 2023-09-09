@@ -3,6 +3,7 @@ import { ConversationInterface, RouteNames } from "../../types";
 import { useRealm } from "../../hooks";
 import { useAtomValue } from "jotai";
 import { usersAtom } from "../../state";
+import { IKImage } from "imagekitio-react";
 // import dayjs from "dayjs";
 
 export interface ListItemConversationProps {
@@ -17,14 +18,13 @@ export const ListItemConversation: React.FC<ListItemConversationProps> = ({
 
   const otherUserId = data.users.find((e) => e !== currentUser?.id);
   const otherUserIdInfo = usersState.find((e) => e._id === otherUserId);
-  const otherUserIdEmail = otherUserIdInfo?.email;
 
   const onOpenChat = () => {
     navigate(RouteNames.CHAT, {
       state: {
         conversationId: data._id.toString(),
         userId: undefined,
-        title: otherUserIdEmail,
+        title: otherUserIdInfo?.fullName || otherUserIdInfo?.email,
         otherUserInfo: otherUserIdInfo,
       },
     });
@@ -38,11 +38,20 @@ export const ListItemConversation: React.FC<ListItemConversationProps> = ({
     >
       <div className="daisy-avatar daisy-online w-12 h-12 self-center">
         <div className="w-full rounded-full">
-          <img src="https://dummyimage.com/500x500/4166eb/fff.jpg" />
+          {otherUserIdInfo?.profileImage ? (
+            <IKImage
+              path={otherUserIdInfo?.profileImage.filePath}
+              loading="lazy"
+            />
+          ) : (
+            <img src="https://dummyimage.com/1000x1000/000/fff" alt="" />
+          )}
         </div>
       </div>
       <div className="flex-1 flex flex-col justify-center whitespace-nowrap overflow-hidden ml-2">
-        <div className="font-medium">{otherUserIdEmail}</div>
+        <div className="font-medium">
+          {otherUserIdInfo?.fullName || otherUserIdInfo?.email}
+        </div>
         <span className="font-light">{data.lastMessage}</span>
         {/* <span className="font-light">{data.lastMessage}</span> */}
       </div>
