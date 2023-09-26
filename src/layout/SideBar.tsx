@@ -1,15 +1,9 @@
 import dayjs from "dayjs";
 import { useConversations, useRealm, useUsers } from "../hooks";
 import { ListItemConversation, ListItemUser } from "../pages/Chat";
-import { useState, useEffect } from "react";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import {
-  callAtom,
-  callSessionsAtom,
-  conversationsAtom,
-  usersAtom,
-} from "../state";
-import { VideoCallModal } from "../components/modals";
+import { useState } from "react";
+import { useAtomValue } from "jotai";
+import { conversationsAtom, usersAtom } from "../state";
 
 const Sidebar = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -112,7 +106,6 @@ const Sidebar = () => {
         >
           <RenderListItemUser onIsUserListChange={onIsUserListChange} />
         </div>
-        <VideoCallModal />
       </div>
     </>
   );
@@ -121,48 +114,9 @@ export default Sidebar;
 
 const RenderListItemConversation = () => {
   const conversationsState = useAtomValue(conversationsAtom);
-  const setCallSessionsState = useSetAtom(callSessionsAtom);
-  const [callState, setCallState] = useAtom(callAtom);
-  const { currentUser } = useRealm();
-  const usersState = useAtomValue(usersAtom);
   const conversationsStateSorted = conversationsState.sort((a, b) =>
     dayjs(b.modifyAt).diff(dayjs(a.modifyAt))
   );
-
-  useEffect(() => {
-    conversationsState.forEach((e) => {
-      if (e.callSessions && e.callSessions.isCall) {
-        setCallSessionsState(e.callSessions);
-
-        if (e.callSessions.mode === "CALLING" && callState === null) {
-          const otherUserIdFilter = e.users.filter(
-            (e) => e !== currentUser?.id
-          );
-          const otherUserId =
-            otherUserIdFilter.length > 0 ? otherUserIdFilter[0] : undefined;
-          const usersListWithoutCurrentUser = usersState.find(
-            (e) => e._id === otherUserId
-          );
-          if (!usersListWithoutCurrentUser) return;
-          setCallState({
-            conversationId: e._id.toString(),
-            isIamCalling: false,
-            otherUser: usersListWithoutCurrentUser,
-          });
-        }
-      } else if (e.callSessions && !e.callSessions.isCall) {
-        setCallSessionsState(null);
-        setCallState(null);
-      }
-    });
-  }, [
-    conversationsState,
-    setCallSessionsState,
-    callState,
-    setCallState,
-    usersState,
-    currentUser,
-  ]);
 
   return (
     <>

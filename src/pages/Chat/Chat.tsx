@@ -11,9 +11,8 @@ import {
 } from "./ChatMessageSkeleton";
 import { useConversations, useMessages, useRealm } from "../../hooks";
 import { groupMessagesData } from "../../utils";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import {
-  callAtom,
   conversationsLoadingAtom,
   currentConversationIdAtom,
   messagesAtom,
@@ -28,7 +27,6 @@ export const Chat = () => {
   const messagesAtomState = useAtomValue(messagesAtom);
   const messagesLoadingState = useAtomValue(messagesLoadingAtom);
   const conversationsLoadingState = useAtomValue(conversationsLoadingAtom);
-  const setCallState = useSetAtom(callAtom);
   const [currentConversationId, setCurrentConversationId] = useAtom(
     currentConversationIdAtom
   );
@@ -60,20 +58,11 @@ export const Chat = () => {
     await messages.sendMessage(value, fileArray);
   };
 
-  const onVideoCall = () => {
-    if (!currentConversationId) return;
-    setCallState({
-      otherUser: locationState.otherUserInfo,
-      isIamCalling: true,
-      conversationId: currentConversationId,
-    });
-  };
-
   if (!currentConversationId) return <Navigate to={RouteNames.HOME} />;
   return (
     <div className="flex-1 w-full bg-base-100 flex flex-col">
       <div className="flex-none bg-base-200 h-12 flex items-center pl-12 pr-2 sm:px-6">
-        <ChatHeader title={locationState.title} onVideoCall={onVideoCall} />
+        <ChatHeader title={locationState.title} />
         {/* <input
           type="text"
           placeholder="Search..."
